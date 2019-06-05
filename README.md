@@ -1,8 +1,10 @@
 # Minicursos de Python GEPOC 1/2019
 
-Neste repositório estão os materiais utilizados para os módulos:
-* 1 sobre parte Básica de Python
-* 2 sobre parte Avançada de Python
+Neste repositório estão os materiais utilizados para os módulos sobre a parte:
+* Básica de Python (Módulo 1)
+* Avançada (Módulo 2)
+* Científica (Módulo 3)
+* Typhoon API (Módulo 4)
 
 Entre os materias disponibilizados estão um jupyter notebook e os slides em 
 PDF.
