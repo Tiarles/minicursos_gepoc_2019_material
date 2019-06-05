@@ -1,0 +1,2210 @@
+version = 4.2
+
+//
+// Saved by sw version: 2019.1
+// Save timestamp: 09-May-2019 @ 03:48:29 PM
+//
+
+model "droop" {
+    configuration {
+        hil_device = "HIL604"
+        hil_configuration_id = 2
+        simulation_method = exact
+        simulation_time_step = auto
+        simulation_discret_scaling = 1.0
+        dsp_timer_periods = 100e-6, 50e-3
+        ss_calc_method = "systematic elimination"
+        enb_pole_shift = True
+        enb_gds_oversampling = True
+        show_modes = False
+        device_ao_limit_enable = False
+        cpl_stb = False
+        enb_dep_sw_detect = False
+        code_section = "internal memory"
+        data_section = "internal memory"
+        sys_sp_rate_1 = 0.0001
+        sys_sp_rate_2 = 0.05
+        sys_real_type_precision = "default"
+        user_real_type_precision = "default"
+        sys_cpu_optimization = "high"
+        user_cpu_optimization = "high"
+    }
+
+    component Subsystem Root {
+        component src_voltage Vs1 {
+            param_set = ""
+        }
+        [
+            position = 8000, 8184
+            rotation = right
+        ]
+
+        component pas_capacitor C1 {
+            capacitance = "24e-6"
+        }
+        [
+            position = 8624, 8192
+            rotation = right
+        ]
+
+        component pas_capacitor C2 {
+            capacitance = "24e-6"
+        }
+        [
+            position = 8624, 8728
+            rotation = right
+        ]
+
+        component src_voltage Vs2 {
+            param_set = ""
+        }
+        [
+            position = 8000, 8672
+            rotation = right
+        ]
+
+        component pas_inductor Lf1 {
+        }
+        [
+            position = 8488, 8096
+        ]
+
+        component pas_inductor Lf2 {
+        }
+        [
+            position = 8488, 8584
+        ]
+
+        component pas_inductor Lo1 {
+        }
+        [
+            position = 8848, 8096
+        ]
+
+        component pas_inductor Lo2 {
+        }
+        [
+            position = 8800, 8584
+        ]
+
+        component "core/Single Phase Inverter" "Single Phase Inverter1" {
+            Sa_bot = "26"
+            Sa_top = "32"
+            Sb_bot = "32"
+            Sb_top = "26"
+            carr_ph_offset = "[0.0, 0.0]"
+            carrier_freq = "15000.0"
+            ctrl_src = "Internal modulator"
+            d_time = "1e-9"
+            dtv_flag_en = "False"
+            execution_rate = "Ts"
+            ref_sig_min_max = "[0.0, 1.0]"
+        }
+        [
+            position = 8168, 8192
+            size = 127, 256
+        ]
+
+        component "core/Single Phase Inverter" "Single Phase Inverter2" {
+            Sa_bot = "13"
+            Sa_top = "18"
+            Sb_bot = "18"
+            Sb_top = "13"
+            carr_ph_offset = "[0.0, 0.0]"
+            carrier_freq = "15000.0"
+            ctrl_src = "Internal modulator"
+            d_time = "1e-9"
+            dtv_flag_en = "False"
+            execution_rate = "Ts"
+            ref_sig_min_max = "[0.0, 1.0]"
+        }
+        [
+            position = 8168, 8680
+            size = 127, 256
+        ]
+
+        component "core/Current Measurement" i1 {
+            execution_rate = "Ts"
+            sig_output = "True"
+        }
+        [
+            position = 8680, 8096
+            size = 64, 32
+        ]
+
+        component "core/Current Measurement" i2 {
+            execution_rate = "Ts"
+            sig_output = "True"
+        }
+        [
+            position = 8672, 8584
+            size = 64, 32
+        ]
+
+        component "core/Current Measurement" io2 {
+        }
+        [
+            position = 9040, 8584
+            size = 64, 32
+        ]
+
+        component "core/Voltage Measurement" vi2 {
+        }
+        [
+            position = 8304, 8680
+            rotation = right
+            size = 64, 32
+        ]
+
+        component "core/Voltage Measurement" vi1 {
+        }
+        [
+            position = 8304, 8192
+            rotation = right
+            size = 64, 32
+        ]
+
+        component "core/Voltage Measurement" vb1 {
+            execution_rate = "Ts"
+            feed_forward = "true"
+            sig_output = "True"
+        }
+        [
+            position = 8744, 8192
+            rotation = right
+            size = 64, 32
+        ]
+
+        component "core/Voltage Measurement" vb2 {
+            execution_rate = "Ts"
+            sig_output = "True"
+        }
+        [
+            position = 8744, 8680
+            rotation = right
+            size = 64, 32
+        ]
+
+        component "core/Single Phase Core Coupling" "Core Coupling 1" {
+        }
+        [
+            position = 8560, 8680
+            scale = -1, 1
+            size = 12, 256
+        ]
+
+        component "core/Current Measurement" Iload {
+        }
+        [
+            position = 9264, 8264
+            size = 64, 32
+        ]
+
+        component gen_c_function "C function1" {
+            execution_rate = "Ts"
+            global_variables = "real Tr;real vag;real i_d;real i_q;real vb_d;real vb_q;real vb_D;real vb_Q;real vi_d;real vi_q;real teta_i;real teta_b;real delta;real seno;real cosseno;int t1;real np;real p;real q;real V;real wi;real pf;real qf;real S_nom;real V_nom;real p_ref;real q_ref;real mp;real mq;real erro_w;real v;real teta;real w;real pi;real vi;real R2;real freq;real vbg;real Rv;real i_alfa;real i_beta;real i_alfa_ant;real i_beta_ant;real vb_alfa;real vb_beta;real vb_alfa_ant;real vb_beta_ant;real vi_alfa;real vi_beta;real vi_alfa_ant;real vi_beta_ant;real wbp;"
+            in_terminal_dimensions = "inherit;inherit;inherit"
+            in_terminal_dimensions_str = "i inherit;vb inherit;Ts inherit"
+            in_terminal_labels = "[(\'i\', True), (\'vb\', True), (\'Ts\', True)]"
+            in_terminal_properties = "real i;real vb;real Ts;"
+            init_fnc = "/*Begin code section*/
+Rv = 0.5;
+R2 = 1.4142135623730950488016887242097;
+pi = 3.1415926535897932384626433832795;
+hab_inv = 1;
+w = 6.2831853071795864769*60;
+
+Tr = 1/60;
+freq = 0;
+
+// Variáveis de controle
+i_d = 0.; 
+i_q = 0; 
+vb_d = 0.; 
+vb_q = 0.; 
+vb_D = 0.; 
+vb_Q = 0.;
+vi_d = 0.; 
+vi_q = 0.;
+i_alfa = 0;
+i_beta = 0;
+
+// Outras variáveis
+seno=0.,cosseno=0.;   // Seno e cosseno gerados internamente ou a partir da rede
+t1=0; // Tempo para geração de referência
+np=200;
+//float seno_alfa=0.,cosseno_alfa=0.,seno_beta=0.,cosseno_beta=0.;
+
+// Variáveis DROOP
+p=0;
+q=0.;
+V=0.;
+wi=w;
+pf = 0;
+qf = 0;
+S_nom = 750.;
+V_nom=120.; 
+p_ref=0.;
+q_ref=0.;
+mp=0.004188790204; mq=0.008; //mp = 2*pi*0.5 / S_nom e mq = 0.05 * V_nom / S_nom
+erro_w=0.; 
+v=0.;
+teta=0.;
+wbp = 2*pi*6;
+/*End code section*/"
+            no_feed_inputs = "[\'\']"
+            no_feed_outputs = "[\'\', \'PWMa1\', \'PWMa2\', \'hab_inv\', \'V_\', \'freq_\', \'P_\', \'Q_\']"
+            out_terminal_dimensions = "inherit;inherit;inherit;inherit;inherit;inherit;inherit"
+            out_terminal_dimensions_str = "PWMa1 inherit;PWMa2 inherit;hab_inv inherit;V_ inherit;freq_ inherit;P_ inherit;Q_ inherit"
+            out_terminal_labels = "[(\'PWMa1\', True), (\'PWMa2\', True), (\'hab_inv\', True), (\'V_\', True), (\'freq_\', True), (\'P_\', True), (\'Q_\', True)]"
+            out_terminal_properties = "real PWMa1;real PWMa2;int hab_inv;real V_;real freq_;real P_;real Q_;"
+            output_fnc = "/*Begin code section*/
+vi = v;
+
+// Gerador de sinais em quadratura para obtenção de alfa e beta
+i_alfa_ant = i_alfa;
+i_beta_ant = i_beta;
+i_alfa = i_alfa_ant -wi*i_alfa*Ts - wi*i_beta_ant*Ts + wi*i*Ts;
+i_beta = i_beta_ant + wi*i_alfa*Ts;
+
+vb_alfa_ant = vb_alfa;
+vb_beta_ant = vb_beta;
+vb_alfa = vb_alfa_ant -wi*vb_alfa*Ts - wi*vb_beta_ant*Ts + wi*vb*Ts;
+vb_beta = vb_beta_ant + wi*vb_alfa*Ts;
+
+p = (vb_alfa * i_alfa + vb_beta * i_beta)/2.;
+q = (vb_beta * i_alfa - vb_alfa * i_beta)/2.;
+
+pf = pf*(1-wbp*Ts) + wbp*Ts*p; 
+qf = qf*(1-wbp*Ts) + wbp*Ts*q;
+
+// Lei de droop 1
+// Indutivo
+//V = V_nom - mq * qf; // DROOP INDUTIVO V - Q, w - P
+//wi = w - mp * pf;
+
+//Resistivo
+V = V_nom - mp * pf; // DROOP RESISTIVO V - P, w - Q
+wi = w + mq * qf;
+
+freq = wi/(2*pi);
+
+// Integrar wi para obter teta ZOH
+teta = teta + Ts*(erro_w);
+erro_w = wi;
+
+if(teta > (2*pi)) teta = teta - 2*pi;
+
+v = R2*V*cos(teta);
+
+v = v - 0.5*i; // impedancia virtual resistiva
+
+// Impedância virtual resistiva
+//v = v - Rv*i;
+
+//v = R2*V*seno;
+//v = R2*V_nom*seno;
+
+// MODULAÇÃO
+if (v > 220.) v = 220.;
+if (v < -220.) v = -220.;
+
+vag = v/2. + 110.;
+vbg = -v/2. + 110;
+
+PWMa1 = vag/220.;
+PWMa2 = vbg/220.;
+
+V_ = V;
+freq_ = freq;
+P_ = pf;
+Q_ = qf;
+/*End code section*/"
+        }
+        [
+            position = 8456, 7808
+            size = 128, 176
+        ]
+
+        component gen_probe V_1 {
+        }
+        [
+            position = 8760, 7864
+        ]
+
+        component gen_probe freq_1 {
+        }
+        [
+            position = 8728, 7888
+        ]
+
+        component gen_probe freq_2 {
+        }
+        [
+            position = 9280, 7832
+        ]
+
+        component gen_probe V_2 {
+        }
+        [
+            position = 9312, 7808
+        ]
+
+        component src_constant Constant1 {
+            execution_rate = "Ts"
+            value = "Ts"
+        }
+        [
+            position = 8328, 7872
+        ]
+
+        component "core/Current Measurement" io1 {
+        }
+        [
+            position = 9016, 8096
+            size = 64, 32
+        ]
+
+        component gen_c_function "C function2" {
+            execution_rate = "Ts"
+            global_variables = "real Tr;real vag;real i_d;real i_q;real vb_d;real vb_q;real vb_D;real vb_Q;real vi_d;real vi_q;real teta_i;real teta_b;real delta;real seno;real cosseno;int t1;real np;real p;real q;real V;real wi;real pf;real qf;real S_nom;real V_nom;real p_ref;real q_ref;real mp;real mq;real erro_w;real v;real teta;real w;real pi;real vi;real R2;real freq;real vbg;real Rv;real i_alfa;real i_beta;real i_alfa_ant;real i_beta_ant;real vb_alfa;real vb_beta;real vb_alfa_ant;real vb_beta_ant;real vi_alfa;real vi_beta;real vi_alfa_ant;real vi_beta_ant;real w_PLL;real a1;real a2;real x_PLL;real erro_PLL;real wbp;"
+            in_terminal_dimensions = "inherit;inherit;inherit"
+            in_terminal_dimensions_str = "i inherit;vb inherit;Ts inherit"
+            in_terminal_labels = "[(\'i\', True), (\'vb\', True), (\'Ts\', True)]"
+            in_terminal_properties = "real i;real vb;real Ts;"
+            init_fnc = "/*Begin code section*/
+Rv = 0.5;
+R2 = 1.4142135623730950488016887242097;
+pi = 3.1415926535897932384626433832795;
+hab_inv = 1;
+w = 6.2831853071795864769*60;
+
+Tr = 1/60;
+freq = 0;
+
+// Variáveis de controle
+i_d = 0.; 
+i_q = 0; 
+vb_d = 0.; 
+vb_q = 0.; 
+vb_D = 0.; 
+vb_Q = 0.;
+vi_d = 0.; 
+vi_q = 0.;
+i_alfa = 0;
+i_beta = 0;
+
+//PLL
+w_PLL = 0;
+a1 = 0.1;
+a2 = 20;
+x_PLL = 0;
+erro_PLL = 0;
+
+// Outras variáveis
+seno=0.,cosseno=0.;   // Seno e cosseno gerados internamente ou a partir da rede
+t1=0; // Tempo para geração de referência
+np=200;
+//float seno_alfa=0.,cosseno_alfa=0.,seno_beta=0.,cosseno_beta=0.;
+
+// Variáveis DROOP
+p=0;
+q=0.;
+V=0.;
+wi=w;
+pf = 0;
+qf = 0;
+S_nom = 750.;
+V_nom=120.; 
+p_ref=0.;
+q_ref=0.;
+mp=0.004188790204; mq=0.008; //mp = 2*pi*0.5 / S_nom e mq = 0.05 * V_nom / S_nom
+erro_w=0.; 
+v=0.;
+teta=0.;
+wbp=2*pi*6;
+/*End code section*/"
+            no_feed_inputs = "[\'\']"
+            no_feed_outputs = "[\'\', \'PWMa1\', \'PWMa2\', \'hab_inv\', \'V_\', \'freq_\', \'P_\', \'Q_\']"
+            out_terminal_dimensions = "inherit;inherit;inherit;inherit;inherit;inherit;inherit"
+            out_terminal_dimensions_str = "PWMa1 inherit;PWMa2 inherit;hab_inv inherit;V_ inherit;freq_ inherit;P_ inherit;Q_ inherit"
+            out_terminal_labels = "[(\'PWMa1\', True), (\'PWMa2\', True), (\'hab_inv\', True), (\'V_\', True), (\'freq_\', True), (\'P_\', True), (\'Q_\', True)]"
+            out_terminal_properties = "real PWMa1;real PWMa2;int hab_inv;real V_;real freq_;real P_;real Q_;"
+            output_fnc = "/*Begin code section*/
+vi = v;
+
+// Gerador de sinais em quadratura para obtenção de alfa e beta
+i_alfa_ant = i_alfa;
+i_beta_ant = i_beta;
+i_alfa = i_alfa_ant -wi*i_alfa*Ts - wi*i_beta_ant*Ts + wi*i*Ts;
+i_beta = i_beta_ant + wi*i_alfa*Ts;
+
+vb_alfa_ant = vb_alfa;
+vb_beta_ant = vb_beta;
+vb_alfa = vb_alfa_ant -wi*vb_alfa*Ts - wi*vb_beta_ant*Ts + wi*vb*Ts;
+vb_beta = vb_beta_ant + wi*vb_alfa*Ts;
+
+p = (vb_alfa * i_alfa + vb_beta * i_beta)/2.;
+q = (vb_beta * i_alfa - vb_alfa * i_beta)/2.;
+
+pf = pf*(1-wbp*Ts) + wbp*Ts*p; 
+qf = qf*(1-wbp*Ts) + wbp*Ts*q;
+
+// Lei de droop
+// Indutivo
+//V = V_nom - mq * (qf - q_ref); // DROOP INDUTIVO V - Q, w - P
+//wi = w - mp * (pf - p_ref) + w_PLL;
+
+//Resistivo
+V = V_nom - mp * pf;  //DROOP RESISTIVO V - P, w - Q
+wi = w + mq * qf;
+
+// Integrar wi para obter teta ZOH
+teta = teta + Ts*(erro_w);
+erro_w = wi;
+
+if(teta > (2*pi)) teta = teta - 2*pi;
+    
+v = R2*V*cos(teta);
+
+v = v - 0.5*i; // impedancia virtual resistiva
+
+// MODULAÇÃO
+if (v > 220.) v = 220.;
+if (v < -220.) v = -220.;
+
+vag = v/2. + 110.;
+vbg = -v/2. + 110;
+
+PWMa1 = vag/220.;
+PWMa2 = vbg/220.;
+
+freq = wi/(2*pi);
+
+V_ = V;
+freq_ = freq;
+P_ = pf;
+Q_ = qf;
+/*End code section*/"
+        }
+        [
+            position = 9048, 7808
+            size = 128, 176
+        ]
+
+        component src_constant Constant2 {
+            execution_rate = "Ts"
+            value = "Ts"
+        }
+        [
+            position = 8904, 7872
+        ]
+
+        component pas_resistor Rc {
+            resistance = "0.1"
+        }
+        [
+            position = 8624, 8640
+            rotation = right
+        ]
+
+        component pas_resistor Rf1 {
+            resistance = "0.7"
+        }
+        [
+            position = 8384, 8096
+        ]
+
+        component pas_resistor Rf2 {
+            resistance = "0.7"
+        }
+        [
+            position = 8384, 8584
+        ]
+
+        component "core/Voltage RMS" VbRMS {
+            feed_forward = "true"
+        }
+        [
+            position = 9336, 8352
+            rotation = right
+            size = 64, 32
+        ]
+
+        component "core/Voltage Measurement" Vload {
+            execution_rate = "Ts"
+            feed_forward = "true"
+            sig_output = "True"
+        }
+        [
+            position = 9416, 8352
+            rotation = right
+            size = 64, 32
+        ]
+
+        component gen_probe P_1 {
+        }
+        [
+            position = 8696, 7912
+        ]
+
+        component gen_probe Q_1 {
+        }
+        [
+            position = 8664, 7944
+        ]
+
+        component gen_probe P_2 {
+        }
+        [
+            position = 9248, 7856
+        ]
+
+        component gen_probe Q_2 {
+        }
+        [
+            position = 9216, 7888
+        ]
+
+        component pas_resistor Rload20 {
+            resistance = "144"
+        }
+        [
+            position = 10104, 8088
+            rotation = down
+        ]
+
+        component "core/Single Phase Diode Rectifier" "Single Phase Diode Rectifier1" {
+        }
+        [
+            position = 10248, 8360
+            size = 127, 256
+        ]
+
+        component "core/Single Phase Diode Rectifier" "Single Phase Diode Rectifier2" {
+        }
+        [
+            position = 10248, 8672
+            size = 127, 256
+        ]
+
+        component pas_resistor Rload80 {
+            resistance = "36"
+        }
+        [
+            position = 10104, 8152
+            rotation = down
+        ]
+
+        component pas_resistor Rs_25 {
+            resistance = "4.608"
+        }
+        [
+            position = 10112, 8264
+        ]
+
+        component pas_resistor R_25 {
+            resistance = "259.793"
+        }
+        [
+            position = 10496, 8368
+            rotation = right
+        ]
+
+        component pas_resistor Rs_75 {
+            resistance = "0.806"
+        }
+        [
+            position = 10112, 8576
+        ]
+
+        component pas_resistor R_75 {
+            resistance = "45.418"
+        }
+        [
+            position = 10496, 8680
+            rotation = right
+        ]
+
+        component pas_capacitor C_25 {
+            capacitance = "0.4812e-3"
+        }
+        [
+            position = 10400, 8368
+            rotation = right
+        ]
+
+        component pas_capacitor C_75 {
+            capacitance = "2.752e-3"
+        }
+        [
+            position = 10400, 8680
+            rotation = right
+        ]
+
+        component "core/Voltage Measurement" VloadDC_25 {
+            execution_rate = "Ts"
+            feed_forward = "true"
+        }
+        [
+            position = 10600, 8360
+            rotation = right
+            size = 64, 32
+        ]
+
+        component "core/Voltage Measurement" VloadDC_75 {
+            execution_rate = "Ts"
+            feed_forward = "true"
+        }
+        [
+            position = 10600, 8672
+            rotation = right
+            size = 64, 32
+        ]
+
+        component src_ground gnd6 {
+        }
+        [
+            position = 9616, 8504
+        ]
+
+        component src_ground gnd7 {
+        }
+        [
+            position = 10232, 8120
+            rotation = left
+        ]
+
+        component "core/Single Pole Single Throw Contactor" S_inv2 {
+            Sa = "14"
+        }
+        [
+            position = 9128, 8584
+            size = 64, 32
+        ]
+
+        component "core/Single Pole Single Throw Contactor" S_20L {
+            ctrl_src = "Model"
+        }
+        [
+            position = 9736, 8120
+            size = 64, 32
+        ]
+
+        component "core/Single Pole Single Throw Contactor" S_80L {
+            ctrl_src = "Model"
+        }
+        [
+            position = 10008, 8152
+            size = 64, 32
+        ]
+
+        component "core/Single Pole Single Throw Contactor" S_75NL {
+            ctrl_src = "Model"
+        }
+        [
+            position = 10024, 8576
+            size = 64, 32
+        ]
+
+        component "core/Single Pole Single Throw Contactor" S_25NL {
+        }
+        [
+            position = 9736, 8264
+            size = 64, 32
+        ]
+
+        component src_scada_input Chave_S_80L {
+            execution_rate = "Ts"
+            unit = ""
+        }
+        [
+            position = 9856, 7920
+        ]
+
+        component gen_c_function "C function3" {
+            execution_rate = "Ts"
+            global_variables = "int flag1;int flag2;real antVload;real antantVload;real Vload_abs;"
+            in_terminal_dimensions = "inherit;inherit;inherit"
+            in_terminal_dimensions_str = "in inherit;Vload inherit;Vpeak inherit"
+            in_terminal_labels = "[(\'in\', True), (\'Vload\', True), (\'Vpeak\', True)]"
+            in_terminal_properties = "int in;inherit Vload;inherit Vpeak;"
+            init_fnc = "/*Begin code section*/
+out = 0;
+flag1 = 1;
+flag2 = 1;
+
+if (Vload < 0){
+    antVload = -Vload;
+} else {
+    antVload = Vload;
+}
+
+antantVload = antVload;
+/*End code section*/"
+            no_feed_inputs = "[\'\']"
+            no_feed_outputs = "[\'\']"
+            out_terminal_dimensions = "inherit"
+            out_terminal_dimensions_str = "out inherit"
+            out_terminal_labels = "[(\'out\', True)]"
+            output_fnc = "/*Begin code section*/
+if (Vload < 0){
+    Vload_abs = -Vload;
+} else {
+    Vload_abs = Vload;
+}
+
+if (in == 0){
+    out = 0;
+    flag1 = 1;
+    flag2 = 1;
+} else if (in == 1 && antantVload < antVload && antVload > Vload_abs && flag1 == 1) {
+    out = 1;
+    flag1 = 0;
+} else if (in == 2 && antantVload < antVload && antVload > Vload_abs && flag2 == 1) {
+    out = 0;
+    flag2 = 0;
+} else {
+    out = out;
+}
+/*End code section*/"
+            update_fnc = "/*Begin code section*/
+antantVload = antVload;
+
+if (Vload < 0){
+    antVload = -Vload;
+} else {
+    antVload = Vload;
+}
+/*End code section*/"
+        }
+        [
+            position = 9936, 7976
+            size = 48, 64
+        ]
+
+        component src_constant Constant3 {
+            execution_rate = "Ts"
+            value = "138"
+        }
+        [
+            position = 9856, 8024
+        ]
+
+        component src_scada_input Chave_S_75NL {
+            execution_rate = "Ts"
+            unit = ""
+        }
+        [
+            position = 9976, 8304
+        ]
+
+        component src_constant Constant4 {
+            execution_rate = "Ts"
+            value = "138"
+        }
+        [
+            position = 9976, 8408
+        ]
+
+        component gen_c_function "C function4" {
+            execution_rate = "Ts"
+            global_variables = "int flag1;int flag2;real antVload;real antantVload;real Vload_abs;"
+            in_terminal_dimensions = "inherit;inherit;inherit"
+            in_terminal_dimensions_str = "in inherit;Vload inherit;Vpeak inherit"
+            in_terminal_labels = "[(\'in\', True), (\'Vload\', True), (\'Vpeak\', True)]"
+            in_terminal_properties = "int in;inherit Vload;inherit Vpeak;"
+            init_fnc = "/*Begin code section*/
+out = 0;
+flag1 = 1;
+flag2 = 1;
+
+if (Vload < 0){
+    antVload = -Vload;
+} else {
+    antVload = Vload;
+}
+
+antantVload = antVload;
+/*End code section*/"
+            no_feed_inputs = "[\'\']"
+            no_feed_outputs = "[\'\']"
+            out_terminal_dimensions = "inherit"
+            out_terminal_dimensions_str = "out inherit"
+            out_terminal_labels = "[(\'out\', True)]"
+            output_fnc = "/*Begin code section*/
+if (Vload < 0){
+    Vload_abs = -Vload;
+} else {
+    Vload_abs = Vload;
+}
+
+if (in == 0){
+    out = 0;
+    flag1 = 1;
+    flag2 = 1;
+} else if (in == 1 && antantVload < antVload && antVload > Vload && flag1 == 1) {
+    out = 1;
+    flag1 = 0;
+} else if (in == 2 && antantVload < antVload && antVload > Vload && flag2 == 1) {
+    out = 0;
+    flag2 = 0;
+} else {
+    out = out;
+}
+/*End code section*/"
+            update_fnc = "/*Begin code section*/
+antantVload = antVload;
+
+if (Vload < 0){
+    antVload = -Vload;
+} else {
+    antVload = Vload;
+}
+/*End code section*/"
+        }
+        [
+            position = 10072, 8360
+            size = 48, 64
+        ]
+
+        component pas_inductor Lf3 {
+        }
+        [
+            position = 8488, 9080
+        ]
+
+        component "core/Current Measurement" io3 {
+        }
+        [
+            position = 9040, 9080
+            size = 64, 32
+        ]
+
+        component pas_resistor Rc1 {
+            resistance = "0.1"
+        }
+        [
+            position = 8624, 9136
+            rotation = right
+        ]
+
+        component "core/Voltage Measurement" vi3 {
+        }
+        [
+            position = 8304, 9176
+            rotation = right
+            size = 64, 32
+        ]
+
+        component pas_capacitor C3 {
+            capacitance = "24e-6"
+        }
+        [
+            position = 8624, 9224
+            rotation = right
+        ]
+
+        component "core/Single Phase Inverter" "Single Phase Inverter3" {
+            Sa_bot = "13"
+            Sa_top = "18"
+            Sb_bot = "18"
+            Sb_top = "13"
+            carr_ph_offset = "[0.0, 0.0]"
+            carrier_freq = "15000.0"
+            ctrl_src = "Internal modulator"
+            d_time = "1e-9"
+            dtv_flag_en = "False"
+            execution_rate = "Ts"
+            ref_sig_min_max = "[0.0, 1.0]"
+        }
+        [
+            position = 8168, 9176
+            size = 127, 256
+        ]
+
+        component "core/Single Pole Single Throw Contactor" S_inv3 {
+            Sa = "14"
+        }
+        [
+            position = 9128, 9080
+            size = 64, 32
+        ]
+
+        component pas_inductor Lo3 {
+        }
+        [
+            position = 8800, 9080
+        ]
+
+        component "core/Voltage Measurement" vb3 {
+            execution_rate = "Ts"
+            sig_output = "True"
+        }
+        [
+            position = 8744, 9176
+            rotation = right
+            size = 64, 32
+        ]
+
+        component "core/Single Phase Core Coupling" "Core Coupling 4" {
+        }
+        [
+            position = 8560, 9176
+            scale = -1, 1
+            size = 12, 256
+        ]
+
+        component src_voltage Vs3 {
+            param_set = ""
+        }
+        [
+            position = 8000, 9168
+            rotation = right
+        ]
+
+        component pas_resistor Rf3 {
+            resistance = "0.7"
+        }
+        [
+            position = 8384, 9080
+        ]
+
+        component "core/Current Measurement" i3 {
+            execution_rate = "Ts"
+            sig_output = "True"
+        }
+        [
+            position = 8672, 9080
+            size = 64, 32
+        ]
+
+        component gen_probe V_3 {
+        }
+        [
+            position = 9880, 7808
+        ]
+
+        component gen_probe Q_3 {
+        }
+        [
+            position = 9784, 7888
+        ]
+
+        component gen_probe P_3 {
+        }
+        [
+            position = 9816, 7856
+        ]
+
+        component gen_probe freq_3 {
+        }
+        [
+            position = 9848, 7832
+        ]
+
+        component src_constant Constant5 {
+            execution_rate = "Ts"
+            value = "Ts"
+        }
+        [
+            position = 9472, 7872
+        ]
+
+        component gen_c_function "C function5" {
+            execution_rate = "Ts"
+            global_variables = "real Tr;real vag;real i_d;real i_q;real vb_d;real vb_q;real vb_D;real vb_Q;real vi_d;real vi_q;real teta_i;real teta_b;real delta;real seno;real cosseno;int t1;real np;real p;real q;real V;real wi;real pf;real qf;real S_nom;real V_nom;real p_ref;real q_ref;real mp;real mq;real erro_w;real v;real teta;real w;real pi;real vi;real R2;real freq;real vbg;real Rv;real i_alfa;real i_beta;real i_alfa_ant;real i_beta_ant;real vb_alfa;real vb_beta;real vb_alfa_ant;real vb_beta_ant;real vi_alfa;real vi_beta;real vi_alfa_ant;real vi_beta_ant;real w_PLL;real a1;real a2;real x_PLL;real erro_PLL;real wbp;"
+            in_terminal_dimensions = "inherit;inherit;inherit"
+            in_terminal_dimensions_str = "i inherit;vb inherit;Ts inherit"
+            in_terminal_labels = "[(\'i\', True), (\'vb\', True), (\'Ts\', True)]"
+            in_terminal_properties = "real i;real vb;real Ts;"
+            init_fnc = "/*Begin code section*/
+Rv = 0.5;
+R2 = 1.4142135623730950488016887242097;
+pi = 3.1415926535897932384626433832795;
+hab_inv = 1;
+w = 6.2831853071795864769*60;
+
+Tr = 1/60;
+freq = 0;
+
+// Variáveis de controle
+i_d = 0.; 
+i_q = 0; 
+vb_d = 0.; 
+vb_q = 0.; 
+vb_D = 0.; 
+vb_Q = 0.;
+vi_d = 0.; 
+vi_q = 0.;
+i_alfa = 0;
+i_beta = 0;
+
+//PLL
+w_PLL = 0;
+a1 = 0.1;
+a2 = 20;
+x_PLL = 0;
+erro_PLL = 0;
+
+// Outras variáveis
+seno=0.,cosseno=0.;   // Seno e cosseno gerados internamente ou a partir da rede
+t1=0; // Tempo para geração de referência
+np=200;
+//float seno_alfa=0.,cosseno_alfa=0.,seno_beta=0.,cosseno_beta=0.;
+
+// Variáveis DROOP
+p=0;
+q=0.;
+V=0.;
+wi=w;
+pf = 0;
+qf = 0;
+S_nom = 750.;
+V_nom=120.; 
+p_ref=0.;
+q_ref=0.;
+mp=0.004188790204; mq=0.008; //mp = 2*pi*0.5 / S_nom e mq = 0.05 * V_nom / S_nom
+erro_w=0.; 
+v=0.;
+teta=0.;
+wbp=2*pi*6;
+/*End code section*/"
+            no_feed_inputs = "[\'\']"
+            no_feed_outputs = "[\'\', \'PWMa1\', \'PWMa2\', \'hab_inv\', \'V_\', \'freq_\', \'P_\', \'Q_\']"
+            out_terminal_dimensions = "inherit;inherit;inherit;inherit;inherit;inherit;inherit"
+            out_terminal_dimensions_str = "PWMa1 inherit;PWMa2 inherit;hab_inv inherit;V_ inherit;freq_ inherit;P_ inherit;Q_ inherit"
+            out_terminal_labels = "[(\'PWMa1\', True), (\'PWMa2\', True), (\'hab_inv\', True), (\'V_\', True), (\'freq_\', True), (\'P_\', True), (\'Q_\', True)]"
+            out_terminal_properties = "real PWMa1;real PWMa2;int hab_inv;real V_;real freq_;real P_;real Q_;"
+            output_fnc = "/*Begin code section*/
+vi = v;
+
+// Gerador de sinais em quadratura para obtenção de alfa e beta
+i_alfa_ant = i_alfa;
+i_beta_ant = i_beta;
+i_alfa = i_alfa_ant -wi*i_alfa*Ts - wi*i_beta_ant*Ts + wi*i*Ts;
+i_beta = i_beta_ant + wi*i_alfa*Ts;
+
+vb_alfa_ant = vb_alfa;
+vb_beta_ant = vb_beta;
+vb_alfa = vb_alfa_ant -wi*vb_alfa*Ts - wi*vb_beta_ant*Ts + wi*vb*Ts;
+vb_beta = vb_beta_ant + wi*vb_alfa*Ts;
+
+p = (vb_alfa * i_alfa + vb_beta * i_beta)/2.;
+q = (vb_beta * i_alfa - vb_alfa * i_beta)/2.;
+
+pf = pf*(1-wbp*Ts) + wbp*Ts*p; 
+qf = qf*(1-wbp*Ts) + wbp*Ts*q;
+
+// Lei de droop
+// Indutivo
+//V = V_nom - mq * (qf - q_ref); // DROOP INDUTIVO V - Q, w - P
+//wi = w - mp * (pf - p_ref) + w_PLL;
+
+//Resistivo
+V = V_nom - mp * pf;  //DROOP RESISTIVO V - P, w - Q
+wi = w + mq * qf;
+
+// Integrar wi para obter teta ZOH
+teta = teta + Ts*(erro_w);
+erro_w = wi;
+
+if(teta > (2*pi)) teta = teta - 2*pi;
+    
+v = R2*V*cos(teta);
+
+v = v - 0.5*i; // impedancia virtual resistiva
+
+// MODULAÇÃO
+if (v > 220.) v = 220.;
+if (v < -220.) v = -220.;
+
+vag = v/2. + 110.;
+vbg = -v/2. + 110;
+
+PWMa1 = vag/220.;
+PWMa2 = vbg/220.;
+
+freq = wi/(2*pi);
+
+V_ = V;
+freq_ = freq;
+P_ = pf;
+Q_ = qf;
+/*End code section*/"
+        }
+        [
+            position = 9616, 7808
+            size = 128, 176
+        ]
+
+        component "core/Single Phase Core Coupling" "Core Coupling 5" {
+        }
+        [
+            position = 9520, 8360
+            scale = -1, 1
+            size = 12, 256
+        ]
+
+        tag From2 {
+            value = "vb1"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 8320, 7808
+        ]
+
+        tag From1 {
+            value = "i1"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 8320, 7744
+        ]
+
+        tag Goto1 {
+            value = "i1"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 8744, 8048
+        ]
+
+        tag Goto2 {
+            value = "vb1"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 8840, 8192
+        ]
+
+        tag From3 {
+            value = "En"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 8088, 8024
+        ]
+
+        tag From4 {
+            value = "PWMa1"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 8088, 7984
+        ]
+
+        tag From6 {
+            value = "PWMa2"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 8088, 7944
+        ]
+
+        tag Goto3 {
+            value = "PWMa1"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 8656, 7672
+        ]
+
+        tag Goto4 {
+            value = "PWMa2"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 8656, 7712
+        ]
+
+        tag Goto5 {
+            value = "En"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 8656, 7752
+        ]
+
+        tag From7 {
+            value = "PWMa1_2"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 8088, 8472
+        ]
+
+        tag From8 {
+            value = "En_2"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 8088, 8512
+        ]
+
+        tag From10 {
+            value = "PWMa2_2"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 8088, 8432
+        ]
+
+        tag Goto7 {
+            value = "En_2"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 9240, 7744
+        ]
+
+        tag Goto8 {
+            value = "PWMa1_2"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 9240, 7664
+        ]
+
+        tag Goto9 {
+            value = "PWMa2_2"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 9240, 7704
+        ]
+
+        tag From11 {
+            value = "i2"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 8904, 7744
+        ]
+
+        tag From12 {
+            value = "vb2"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 8904, 7808
+        ]
+
+        tag Goto11 {
+            value = "vb2"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 8840, 8680
+        ]
+
+        tag Goto12 {
+            value = "i2"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 8744, 8536
+        ]
+
+        tag Goto13 {
+            value = "Vload_"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 9448, 8416
+            rotation = right
+        ]
+
+        tag From13 {
+            value = "Vload_"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 9848, 7976
+        ]
+
+        tag From14 {
+            value = "Vload_"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 9968, 8360
+        ]
+
+        tag Goto14 {
+            value = "vb3"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 8840, 9176
+        ]
+
+        tag Goto15 {
+            value = "i3"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 8744, 9032
+        ]
+
+        tag From18 {
+            value = "i3"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 9472, 7744
+        ]
+
+        tag Goto16 {
+            value = "PWMa1_3"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 9808, 7664
+        ]
+
+        tag Goto17 {
+            value = "En_3"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 9808, 7744
+        ]
+
+        tag From19 {
+            value = "vb3"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 9472, 7808
+        ]
+
+        tag Goto18 {
+            value = "PWMa2_3"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 9808, 7704
+        ]
+
+        tag From15 {
+            value = "En_3"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 8088, 9008
+        ]
+
+        tag From17 {
+            value = "PWMa1_3"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 8088, 8968
+        ]
+
+        tag From16 {
+            value = "PWMa2_3"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 8088, 8928
+        ]
+
+        junction Junction43 pe
+        [
+            position = 8304, 8776
+        ]
+
+        junction Junction44 pe
+        [
+            position = 8624, 8776
+        ]
+
+        junction Junction52 pe
+        [
+            position = 8624, 8584
+        ]
+
+        junction Junction54 pe
+        [
+            position = 8304, 8096
+        ]
+
+        junction Junction55 pe
+        [
+            position = 8304, 8584
+        ]
+
+        junction Junction67 pe
+        [
+            position = 10400, 8456
+        ]
+
+        junction Junction68 pe
+        [
+            position = 10400, 8264
+        ]
+
+        junction Junction69 pe
+        [
+            position = 10496, 8264
+        ]
+
+        junction Junction70 pe
+        [
+            position = 10496, 8456
+        ]
+
+        junction Junction73 pe
+        [
+            position = 8744, 8288
+        ]
+
+        junction Junction74 pe
+        [
+            position = 9336, 8456
+        ]
+
+        junction Junction77 pe
+        [
+            position = 8744, 8776
+        ]
+
+        junction Junction78 pe
+        [
+            position = 8936, 8456
+        ]
+
+        junction Junction80 pe
+        [
+            position = 10496, 8768
+        ]
+
+        junction Junction81 pe
+        [
+            position = 10496, 8576
+        ]
+
+        junction Junction82 pe
+        [
+            position = 10400, 8576
+        ]
+
+        junction Junction83 pe
+        [
+            position = 10400, 8768
+        ]
+
+        junction Junction87 pe
+        [
+            position = 9176, 8264
+        ]
+
+        junction Junction88 pe
+        [
+            position = 9336, 8264
+        ]
+
+        junction Junction92 pe
+        [
+            position = 9960, 8120
+        ]
+
+        junction Junction100 pe
+        [
+            position = 10168, 8120
+        ]
+
+        junction Junction101 pe
+        [
+            position = 8624, 9272
+        ]
+
+        junction Junction103 pe
+        [
+            position = 8304, 9080
+        ]
+
+        junction Junction104 pe
+        [
+            position = 8624, 9080
+        ]
+
+        junction Junction107 pe
+        [
+            position = 8304, 9272
+        ]
+
+        junction Junction108 pe
+        [
+            position = 9176, 8584
+        ]
+
+        junction Junction109 pe
+        [
+            position = 8744, 9272
+        ]
+
+        junction Junction110 pe
+        [
+            position = 8936, 8776
+        ]
+
+        junction Junction120 pe
+        [
+            position = 8744, 9080
+        ]
+
+        junction Junction121 pe
+        [
+            position = 8744, 8584
+        ]
+
+        junction Junction122 pe
+        [
+            position = 8744, 8096
+        ]
+
+        junction Junction130 pe
+        [
+            position = 9928, 8264
+        ]
+
+        junction Junction131 pe
+        [
+            position = 8624, 8096
+        ]
+
+        junction Junction132 pe
+        [
+            position = 8304, 8288
+        ]
+
+        junction Junction129 pe
+        [
+            position = 9616, 8264
+        ]
+
+        junction Junction128 pe
+        [
+            position = 9416, 8264
+        ]
+
+        junction Junction127 pe
+        [
+            position = 9416, 8456
+        ]
+
+        junction Junction133 pe
+        [
+            position = 8624, 8288
+        ]
+
+        junction Junction135 pe
+        [
+            position = 9616, 8456
+        ]
+
+        junction Junction136 pe
+        [
+            position = 9840, 8456
+        ]
+
+        junction Junction137 sp
+        [
+            position = 10008, 8072
+        ]
+
+        connect "Core Coupling 1.b_out" Junction43 as Connection242
+        connect "Core Coupling 1.b_in" Junction44 as Connection245
+        connect "Core Coupling 1.a_out" Lf2.n_node as Connection239
+        connect Junction43 "Single Phase Inverter2.b_in" as Connection241
+        [
+            breakpoints = 8304, 8776; 8304, 8776; 8304, 8776; 8304, 8776
+        ]
+        connect S_inv2.a_in io2.n_node as Connection247
+        connect Vs1.p_node "Single Phase Inverter1.pos_out" as Connection1
+        connect Vs1.n_node "Single Phase Inverter1.neg_out" as Connection2
+        connect Vs2.p_node "Single Phase Inverter2.pos_out" as Connection25
+        connect Vs2.n_node "Single Phase Inverter2.neg_out" as Connection30
+        connect vi2.n_node Junction43 as Connection240
+        connect From1 "C function1.i" as Connection285
+        connect From2 "C function1.vb" as Connection286
+        connect From6 "Single Phase Inverter1.InB" as Connection290
+        connect From4 "Single Phase Inverter1.InA" as Connection291
+        connect From3 "Single Phase Inverter1.En" as Connection292
+        connect "C function1.hab_inv" Goto5 as Connection296
+        [
+            breakpoints = 8568, 7784; 8568, 7760
+        ]
+        connect From8 "Single Phase Inverter2.En" as Connection299
+        connect From7 "Single Phase Inverter2.InA" as Connection300
+        connect From10 "Single Phase Inverter2.InB" as Connection301
+        connect "C function1.PWMa1" Goto3 as Connection305
+        [
+            breakpoints = 8536, 7752; 8536, 7680
+        ]
+        connect "C function1.PWMa2" Goto4 as Connection306
+        [
+            breakpoints = 8552, 7768; 8552, 7720
+        ]
+        connect i1.out Goto1 as Connection317
+        connect Goto12 i2.out as Connection322
+        connect vb2.out Goto11 as Connection323
+        connect "C function1.V_" V_1.in as Connection325
+        connect "C function1.freq_" freq_1.in as Connection326
+        connect "C function1.P_" P_1.in as Connection327
+        connect "C function1.Q_" Q_1.in as Connection328
+        connect Constant1.out "C function1.Ts" as Connection340
+        connect "C function2.i" From11 as Connection366
+        connect From12 "C function2.vb" as Connection367
+        connect "C function2.PWMa1" Goto8 as Connection368
+        [
+            breakpoints = 9136, 7760; 9136, 7664
+        ]
+        connect "C function2.PWMa2" Goto9 as Connection369
+        [
+            breakpoints = 9160, 7776; 9160, 7704
+        ]
+        connect "C function2.hab_inv" Goto7 as Connection370
+        [
+            breakpoints = 9184, 7792; 9184, 7744
+        ]
+        connect "C function2.V_" V_2.in as Connection371
+        connect "C function2.freq_" freq_2.in as Connection372
+        connect "C function2.P_" P_2.in as Connection373
+        connect "C function2.Q_" Q_2.in as Connection374
+        connect Constant2.out "C function2.Ts" as Connection375
+        connect Rc.n_node C2.p_node as Connection377
+        connect "Core Coupling 1.a_in" Junction52 as Connection378
+        connect Junction52 i2.p_node as Connection379
+        connect Rc.p_node Junction52 as Connection380
+        connect Lo2.n_node io2.p_node as Connection387
+        connect Lo1.n_node io1.p_node as Connection388
+        connect "Single Phase Inverter1.a_in" Junction54 as Connection390
+        connect Junction54 vi1.p_node as Connection391
+        [
+            breakpoints = 8304, 8096; 8304, 8096
+        ]
+        connect vi2.p_node Junction55 as Connection394
+        connect Junction55 "Single Phase Inverter2.a_in" as Connection395
+        [
+            breakpoints = 8304, 8584; 8304, 8584
+        ]
+        connect Lf1.p_node Rf1.n_node as Connection397
+        connect Rf1.p_node Junction54 as Connection398
+        connect Lf2.p_node Rf2.n_node as Connection399
+        connect Rf2.p_node Junction55 as Connection400
+        connect Goto2 vb1.out as Connection445
+        connect Rs_25.n_node "Single Phase Diode Rectifier1.a_in" as Connection485
+        connect Junction67 "Single Phase Diode Rectifier1.neg_out" as Connection492
+        connect C_25.n_node Junction67 as Connection493
+        connect Junction68 "Single Phase Diode Rectifier1.pos_out" as Connection495
+        connect C_25.p_node Junction68 as Connection496
+        connect R_25.p_node Junction69 as Connection497
+        connect Junction69 Junction68 as Connection498
+        connect VloadDC_25.p_node Junction69 as Connection499
+        connect R_25.n_node Junction70 as Connection500
+        connect VloadDC_25.n_node Junction70 as Connection502
+        connect C2.n_node Junction44 as Connection508
+        [
+            breakpoints = 8624, 8776
+        ]
+        connect Junction73 vb1.n_node as Connection516
+        [
+            breakpoints = 8744, 8288; 8744, 8288
+        ]
+        connect Junction74 VbRMS.n_node as Connection518
+        [
+            breakpoints = 9336, 8432
+        ]
+        connect Junction77 vb2.n_node as Connection525
+        connect Junction73 Junction78 as Connection526
+        [
+            breakpoints = 8936, 8288
+        ]
+        connect Junction78 Junction74 as Connection527
+        connect Junction77 Junction44 as Connection530
+        [
+            breakpoints = 8744, 8776; 8744, 8776; 8744, 8776; 8672, 8776; 8672, 8776; 8672, 8776
+        ]
+        connect Junction82 "Single Phase Diode Rectifier2.pos_out" as Connection562
+        connect C_75.n_node Junction83 as Connection563
+        connect Junction81 Junction82 as Connection564
+        connect C_75.p_node Junction82 as Connection566
+        connect R_75.p_node Junction81 as Connection567
+        connect VloadDC_75.p_node Junction81 as Connection568
+        connect VloadDC_75.n_node Junction80 as Connection569
+        connect R_75.n_node Junction80 as Connection570
+        connect Rs_75.n_node "Single Phase Diode Rectifier2.a_in" as Connection572
+        connect Junction83 "Single Phase Diode Rectifier2.neg_out" as Connection573
+        connect Iload.p_node Junction87 as Connection628
+        connect io1.n_node Junction87 as Connection630
+        connect VbRMS.p_node Junction88 as Connection636
+        connect Junction88 Iload.n_node as Connection637
+        [
+            breakpoints = 9336, 8264
+        ]
+        connect S_80L.a_out Rload80.n_node as Connection652
+        connect S_80L.a_in Junction92 as Connection654
+        connect Junction92 Rload20.n_node as Connection655
+        connect S_20L.a_out Junction92 as Connection656
+        connect S_75NL.a_out Rs_75.p_node as Connection678
+        connect Junction70 Junction67 as Connection704
+        [
+            breakpoints = 10496, 8456; 10456, 8456
+        ]
+        connect Junction83 Junction80 as Connection708
+        [
+            breakpoints = 10400, 8768; 10456, 8768
+        ]
+        connect Rload20.p_node Junction100 as Connection709
+        [
+            breakpoints = 10168, 8088
+        ]
+        connect Junction100 Rload80.p_node as Connection710
+        [
+            breakpoints = 10168, 8120; 10168, 8120; 10168, 8152
+        ]
+        connect gnd7.node Junction100 as Connection711
+        connect "C function3.in" Chave_S_80L.out as Connection713
+        connect From13 "C function3.Vload" as Connection715
+        connect Constant3.out "C function3.Vpeak" as Connection716
+        [
+            breakpoints = 9888, 8024; 9888, 7992
+        ]
+        connect From14 "C function4.Vload" as Connection722
+        connect Constant4.out "C function4.Vpeak" as Connection723
+        connect "C function4.in" Chave_S_75NL.out as Connection724
+        connect "C function4.out" S_75NL.ctrl_in as Connection725
+        [
+            breakpoints = 10112, 8504; 10024, 8504
+        ]
+        connect Junction104 i3.p_node as Connection726
+        connect Lo3.n_node io3.p_node as Connection729
+        connect Junction107 "Single Phase Inverter3.b_in" as Connection730
+        [
+            breakpoints = 8304, 9272; 8304, 9272; 8304, 9272; 8304, 9272
+        ]
+        connect S_inv3.a_in io3.n_node as Connection731
+        connect "Core Coupling 4.b_in" Junction101 as Connection732
+        connect Goto15 i3.out as Connection733
+        connect C3.n_node Junction101 as Connection737
+        [
+            breakpoints = 8624, 9272
+        ]
+        connect vi3.p_node Junction103 as Connection738
+        connect Rf3.p_node Junction103 as Connection739
+        connect "Core Coupling 4.a_in" Junction104 as Connection740
+        connect vi3.n_node Junction107 as Connection742
+        connect Vs3.p_node "Single Phase Inverter3.pos_out" as Connection743
+        connect Rc1.p_node Junction104 as Connection744
+        connect Junction103 "Single Phase Inverter3.a_in" as Connection745
+        [
+            breakpoints = 8304, 9080; 8304, 9080
+        ]
+        connect "Core Coupling 4.b_out" Junction107 as Connection747
+        connect "Core Coupling 4.a_out" Lf3.n_node as Connection748
+        connect Rc1.n_node C3.p_node as Connection750
+        connect vb3.out Goto14 as Connection751
+        connect Vs3.n_node "Single Phase Inverter3.neg_out" as Connection752
+        connect Lf3.p_node Rf3.n_node as Connection753
+        connect "C function5.PWMa1" Goto16 as Connection756
+        [
+            breakpoints = 9704, 7760; 9704, 7664
+        ]
+        connect "C function5.P_" P_3.in as Connection757
+        connect "C function5.i" From18 as Connection758
+        connect "C function5.freq_" freq_3.in as Connection759
+        connect From19 "C function5.vb" as Connection760
+        connect Constant5.out "C function5.Ts" as Connection761
+        connect "C function5.hab_inv" Goto17 as Connection762
+        [
+            breakpoints = 9752, 7792; 9752, 7744
+        ]
+        connect "C function5.V_" V_3.in as Connection763
+        connect "C function5.Q_" Q_3.in as Connection764
+        connect "C function5.PWMa2" Goto18 as Connection765
+        [
+            breakpoints = 9728, 7776; 9728, 7704
+        ]
+        connect Junction87 Junction108 as Connection766
+        [
+            breakpoints = 9176, 8264
+        ]
+        connect Junction108 S_inv2.a_out as Connection767
+        connect S_inv3.a_out Junction108 as Connection768
+        connect vb3.n_node Junction109 as Connection769
+        connect Junction109 Junction101 as Connection770
+        [
+            breakpoints = 8744, 9272; 8744, 9272; 8744, 9272; 8744, 9272; 8672, 9272; 8672, 9272; 8672, 9272
+        ]
+        connect Junction77 Junction110 as Connection771
+        connect Junction110 Junction78 as Connection772
+        connect Junction109 Junction110 as Connection773
+        connect Vload.out Goto13 as Connection774
+        connect vb3.p_node Junction120 as Connection816
+        connect Junction120 Lo3.p_node as Connection817
+        [
+            breakpoints = 8744, 9080
+        ]
+        connect i3.n_node Junction120 as Connection818
+        connect Lo2.p_node Junction121 as Connection820
+        connect Junction121 vb2.p_node as Connection821
+        [
+            breakpoints = 8744, 8584
+        ]
+        connect i2.n_node Junction121 as Connection822
+        connect Lo1.p_node Junction122 as Connection824
+        connect Junction122 i1.n_node as Connection825
+        connect vb1.p_node Junction122 as Connection826
+        connect From15 "Single Phase Inverter3.En" as Connection727
+        connect From17 "Single Phase Inverter3.InA" as Connection749
+        connect From16 "Single Phase Inverter3.InB" as Connection735
+        connect S_75NL.a_in Junction130 as Connection874
+        connect Junction130 Rs_25.p_node as Connection875
+        [
+            breakpoints = 9928, 8264; 9928, 8264
+        ]
+        connect C1.p_node Junction131 as Connection880
+        connect Junction131 i1.p_node as Connection881
+        [
+            breakpoints = 8624, 8096
+        ]
+        connect Lf1.n_node Junction131 as Connection882
+        connect "Single Phase Inverter1.b_in" Junction132 as Connection883
+        connect Junction132 vi1.n_node as Connection884
+        [
+            breakpoints = 8304, 8288; 8304, 8288
+        ]
+        connect S_25NL.a_out Junction130 as Connection876
+        connect "Core Coupling 5.a_in" Junction129 as Connection873
+        connect Vload.p_node Junction128 as Connection868
+        connect S_25NL.a_in Junction129 as Connection871
+        connect Vload.n_node Junction127 as Connection846
+        connect Junction128 Junction88 as Connection869
+        [
+            breakpoints = 9416, 8264; 9416, 8264; 9416, 8264; 9416, 8264; 9416, 8264; 9416, 8264; 9416, 8264; 9416, 8264; 9336, 8264
+        ]
+        connect "Core Coupling 5.a_out" Junction128 as Connection870
+        connect Junction127 Junction74 as Connection847
+        [
+            breakpoints = 9416, 8456; 9416, 8456; 9416, 8456; 9416, 8456; 9416, 8456; 9416, 8456; 9416, 8456; 9416, 8456; 9416, 8456; 9416, 8456; 9416, 8456; 9376, 8456; 9376, 8456; 9336, 8456; 9336, 8456
+        ]
+        connect Junction129 S_20L.a_in as Connection872
+        [
+            breakpoints = 9616, 8264; 9616, 8264; 9616, 8264; 9616, 8264; 9616, 8264
+        ]
+        connect "Core Coupling 5.b_out" Junction127 as Connection865
+        connect Junction73 Junction133 as Connection885
+        [
+            breakpoints = 8744, 8288; 8744, 8288; 8744, 8288; 8672, 8288; 8672, 8288
+        ]
+        connect Junction133 C1.n_node as Connection886
+        [
+            breakpoints = 8624, 8288; 8624, 8288; 8624, 8288; 8624, 8288; 8624, 8288; 8624, 8288
+        ]
+        connect Junction132 Junction133 as Connection887
+        connect Junction135 "Core Coupling 5.b_in" as Connection891
+        connect "Single Phase Diode Rectifier2.b_in" Junction136 as Connection892
+        connect Junction136 "Single Phase Diode Rectifier1.b_in" as Connection893
+        [
+            breakpoints = 9840, 8456; 9840, 8456; 9840, 8456; 9840, 8456
+        ]
+        connect Junction135 Junction136 as Connection894
+        connect Junction135 gnd6.node as Connection899
+        [
+            breakpoints = 9616, 8456; 9616, 8456
+        ]
+        connect "C function3.out" Junction137 as Connection900
+        connect Junction137 S_80L.ctrl_in as Connection901
+        [
+            breakpoints = 10008, 8080
+        ]
+        connect S_20L.ctrl_in Junction137 as Connection902
+    }
+
+    default {
+        gen_c_function {
+            in_terminal_properties = "real in;"
+            in_terminal_labels = ""
+            out_terminal_properties = "real out;"
+            out_terminal_labels = ""
+            no_feed_inputs = ""
+            no_feed_outputs = ""
+            in_terminal_dimensions = ""
+            in_terminal_dimensions_str = ""
+            out_terminal_dimensions = ""
+            out_terminal_dimensions_str = ""
+            output_fnc = ""
+            update_fnc = ""
+            init_fnc = ""
+            global_variables = ""
+            parameters = ""
+            execution_rate = "inherit"
+        }
+
+        gen_probe {
+            addr = "0"
+            override_signal_name = "False"
+            signal_name = ""
+            signal_type = "generic"
+            streaming_en = "False"
+            streaming_er_idx = "0"
+            execution_rate = "inherit"
+        }
+
+        pas_capacitor {
+            capacitance = "1e-6"
+            initial_voltage = "0"
+            pole_shift_ignore = "False"
+            visible = "True"
+        }
+
+        pas_inductor {
+            inductance = "1e-3"
+            initial_current = "0.0"
+            pole_shift_ignore = "False"
+            visible = "True"
+        }
+
+        pas_resistor {
+            resistance = "1"
+        }
+
+        src_constant {
+            value = "1"
+            signal_type = "real"
+            execution_rate = "100e-6"
+        }
+
+        src_scada_input {
+            addr = "0"
+            format = "real"
+            override_signal_name = "False"
+            signal_name = ""
+            signal_type = "real"
+            min = "-1e6"
+            max = "1e6"
+            def_value = "0"
+            unit = " "
+            execution_rate = "100e-6"
+        }
+
+        src_voltage {
+            sig_input = "False"
+            type = "signal generator"
+            param_set = "1phase"
+            parent_label = ""
+            addr = "0"
+            spc_nb = "0"
+            execution_rate = "100e-6"
+            cpd_visible = "True"
+            enable_snb = "False"
+            snb_type = "R2"
+            R2 = "0.0"
+            L1 = "0.1"
+            override_signal_name = "False"
+            signal_name = ""
+            init_source_nature = "Constant"
+            init_const_value = "0.0"
+            init_rms_value = "0.0"
+            init_frequency = "50.0"
+            init_phase = "0.0"
+        }
+
+        "core/Single Phase Diode Rectifier" {
+            FSM_select = "converter"
+            show_monitoring = "False"
+            dynamic_ac_voltage = "False"
+            pesb_optimization = "True"
+        }
+
+        "core/Single Pole Single Throw Contactor" {
+            ctrl_src = "Digital input"
+            Sa = "1"
+            Sa_logic = "active high"
+            enable_fb_out = "False"
+            fb_out_type = "real"
+            execution_rate = "inherit"
+            initial_state = "off"
+            on_delay = "0"
+            off_delay = "0"
+            switching = "any current"
+        }
+
+        "core/Single Phase Core Coupling" {
+            snb_type_i = "none"
+            R1 = "100000.0"
+            C1 = "1e-06"
+            C2 = "1e-06"
+            fixed_snb_i = "false"
+            snb_type_u = "none"
+            R2 = "0.1"
+            L1 = "0.1"
+            L2 = "0.1"
+            fixed_snb_u = "false"
+        }
+
+        "core/Voltage RMS" {
+            op_mode = "PLL based"
+            frequency = "50"
+            sig_output = "False"
+            execution_rate = "inherit"
+            feed_forward = "false"
+            nd_msr_estimation = "false"
+        }
+
+        "core/Current Measurement" {
+            bw_limit = "False"
+            frequency = "10e3"
+            comparator_enable = "False"
+            operator = "greater"
+            threshold = "0"
+            cmp_abs_value = "False"
+            feed_forward = "false"
+            sig_output = "False"
+            execution_rate = "100e-6"
+            addr = "0"
+            nd_msr_estimation = "false"
+            dev_cpl_msr = "false"
+            host_device = "0"
+            output_to_device = "0"
+            dev_cpl_index = "0"
+            dev_cpl_var_nb = "0"
+            visible = "True"
+            override_signal_name = "False"
+            signal_name = ""
+        }
+
+        "core/Single Phase Inverter" {
+            ctrl_src = "Digital input per switch"
+            op_mode = "Fixed carrier frequency"
+            carrier_freq = "10000.0"
+            phase_op_mode = "Fixed carrier phase offset"
+            carr_ph_offset = "[0.0, 180.0]"
+            d_time = "5e-6"
+            ref_sig_min_max = "[-1.0, 1.0]"
+            execution_rate = "inherit"
+            Sa_top = "1"
+            Sa_top_logic = "active high"
+            Sa_bot = "2"
+            Sa_bot_logic = "active high"
+            Sb_top = "3"
+            Sb_top_logic = "active high"
+            Sb_bot = "4"
+            Sb_bot_logic = "active high"
+            losses_estimation = "False"
+            Vce = "1.3"
+            Rce = "0"
+            Vd = "1.2"
+            Rd = "0"
+            i_sw = "[0.0, 6.0, 12.0, 18.0, 24.0]"
+            v_sw = "[0.0, 600.0]"
+            temp_sw = "[25.0, 50.0, 75.0, 100.0, 125.0]"
+            et_on_table_out = "[[0.0, 0.0275e-3, 0.15e-3, 0.275e-3, 0.3e-3], [0.35*3.8e-3, 0.4*3.8e-3, 0.8*3.8e-3, 0.68*3.8e-3, 0.9*3.8e-3], [0.65*3.8e-3, 0.9*3.8e-3, 1.2*3.8e-3, 1.5*3.8e-3, 1.7*3.8e-3], [0.9*3.8e-3, 1.3*3.8e-3, 1.7*3.8e-3, 1.9*3.8e-3, 2.25*3.8e-3], [1.1*3.8e-3, 1.7*3.8e-3, 2.1*3.8e-3, 2.3*3.8e-3, 2.5*3.8e-3]]"
+            et_off_table_out = "[[0.0, 0.0275e-3, 0.15e-3, 0.275e-3, 0.3e-3], [0.35*2.1e-3, 0.4*2.1e-3, 0.8*2.1e-3, 0.68*2.1e-3, 0.9*2.1e-3], [0.65*2.1e-3, 0.9*2.1e-3, 1.2*2.1e-3, 1.5*2.1e-3, 1.7*2.1e-3], [0.9*2.1e-3, 1.3*2.1e-3, 1.7*2.1e-3, 1.9*2.1e-3, 2.25*2.1e-3], [1.1*2.1e-3, 1.7*2.1e-3, 2.1*2.1e-3, 2.3*2.1e-3, 2.5*2.1e-3]]"
+            ed_off_table_out = "[[0.0, 0.0275e-3, 0.15e-3, 0.275e-3, 0.3e-3], [0.35*2.2e-3, 0.4*2.2e-3, 0.8*2.2e-3, 0.68*2.2e-3, 0.9*2.2e-3], [0.65*2.2e-3, 0.9*2.2e-3, 1.2*2.2e-3, 1.5*2.2e-3, 1.7*2.2e-3], [0.9*2.2e-3, 1.3*2.2e-3, 1.7*2.2e-3, 1.9*2.2e-3, 2.25*2.2e-3], [1.1*2.2e-3, 1.7*2.2e-3, 2.1*2.2e-3, 2.3*2.2e-3, 2.5*2.2e-3]]"
+            loss_exec_rate = "100e-6"
+            show_monitoring = "false"
+            FSM_select = "converter"
+            _control_property = "all high"
+            dtv_flag_en = "True"
+        }
+
+        "core/Voltage Measurement" {
+            bw_limit = "False"
+            frequency = "10e3"
+            comparator_enable = "False"
+            operator = "greater"
+            threshold = "0"
+            cmp_abs_value = "False"
+            feed_forward = "false"
+            sig_output = "False"
+            execution_rate = "100e-6"
+            addr = "0"
+            nd_msr_estimation = "false"
+            dev_cpl_msr = "false"
+            host_device = "0"
+            output_to_device = "0"
+            dev_cpl_index = "0"
+            dev_cpl_var_nb = "0"
+            visible = "True"
+            override_signal_name = "False"
+            signal_name = ""
+        }
+    }
+
+    CODE model_init
+        # Numpy module is imported as 'np'
+        # Scipy module is imported as 'sp'
+        Ts = 1/15000
+    ENDCODE
+}

@@ -1,0 +1,2083 @@
+version = 4.2
+
+//
+// Saved by sw version: 2018.4 SP1
+// Save timestamp: 28-Mar-2019 @ 09:31:17 AM
+//
+
+model "npc_svm" {
+    configuration {
+        hil_device = "HIL402"
+        hil_configuration_id = 3
+        simulation_method = exact
+        simulation_time_step = auto
+        simulation_discret_scaling = 1.0
+        dsp_timer_periods = 100e-6, 50e-3
+        ss_calc_method = "systematic elimination"
+        enb_pole_shift = True
+        enb_gds_oversampling = True
+        show_modes = False
+        device_ao_limit_enable = False
+        cpl_stb = False
+        enb_dep_sw_detect = False
+        code_section = "internal memory"
+        data_section = "internal memory"
+        sys_sp_rate_1 = 0.0001
+        sys_sp_rate_2 = 0.05
+        sys_real_type_precision = "default"
+        user_real_type_precision = "default"
+        sys_cpu_optimization = "high"
+        user_cpu_optimization = "high"
+    }
+
+    component Subsystem Root {
+        component gen_c_function "C function1" {
+            execution_rate = "5.0000e-05"
+            global_variables = "real va;real vb;real vc;real vab;real vbc;real va_m;real vb_m;real vc_m;real vag1;real vag2;real vbg1;real vbg2;real vcg1;real vcg2;real TPER;real Ts;real Ts_pwm;real fs;real enable;real t1;real t2;real t3;real d1;real d2;real d3;real v_alpha1;real v_alpha;real v_beta1;real v_beta;real vc1_m;real vc2_m;real ib_eq;real ic_eq;real COMP1;real COMP2;real COMP3;real COMP4;real COMP5;real COMP6;real COMPs1a;real COMPs2a;real COMPs1b;real COMPs2b;real COMPs1c;real COMPs2c;real sector;real sextant;real theta;real Vcc_ref;real C;real a;real K;real Z;real e;real e_p;real x_pi;real x_pi_p;real pi;real ia_eq;real i_ref;real COMP1_p;real COMP2_p;real COMP3_p;real COMP4_p;real COMP5_p;real COMP6_p;real delta;real error;real hyteresis;real sign;"
+            in_terminal_dimensions = "inherit;inherit;inherit;inherit;inherit;inherit;inherit;inherit;inherit"
+            in_terminal_dimensions_str = "ref_a inherit;ref_b inherit;ref_c inherit;ia inherit;ib inherit;ic inherit;vc1 inherit;vc2 inherit;M inherit"
+            in_terminal_labels = "[(\'ref_a\', False), (\'ref_b\', False), (\'ref_c\', False), (\'ia\', False), (\'ib\', False), (\'ic\', False), (\'vc1\', False), (\'vc2\', False), (\'M\', False)]"
+            in_terminal_properties = "real ref_a;real ref_b;real ref_c;real ia;real ib;real ic;real vc1;real vc2;inherit M;"
+            init_fnc = "/*Begin code section*/
+va = 0, vb = 0, vc = 0;
+vab = 0, vbc = 0;
+va_m = 0, vb_m = 0, vc_m = 0;
+vag1 = 0, vag2 = 0, vbg1 = 0, vbg2 = 0, vcg1 = 0, vcg2 = 0;
+
+enable  = 0;
+
+delta = 10;
+error = 0;
+hyteresis = 0;
+sign = 0;
+
+fs = 1260;
+Ts = 1/fs;
+Ts_pwm = 0.5*Ts; 
+
+TPER = 100;
+
+t1 - 0, t2 = 0, t3 = 0;
+d1 = 0, d2 = 0, d3 = 0;
+v_alpha1 = 0, v_beta1 = 0, v_alpha = 0, v_beta = 0;
+
+vc1_m = 0, vc2_m = 0;
+ia_eq = 0, ic_eq = 0, ic_eq = 0;
+i_ref = 0;
+
+COMP1 = 0, COMP2 = 0, COMP3 = 0, COMP4 = 0, COMP5 = 0, COMP6 = 0;
+COMP1_p = 0, COMP2_p = 0, COMP3_p = 0, COMP4_p = 0, COMP5_p = 0, COMP6_p = 0;
+COMPs1a = 0, COMPs2a = 0, COMPs1b = 0, COMPs2b = 0, COMPs1c = 0, COMPs2c = 0;
+
+sector = 0, sextant = 0, theta = 0;
+
+Vcc_ref = 400;
+/*End code section*/"
+            no_feed_inputs = "[\'\']"
+            no_feed_outputs = "[\'\']"
+            out_terminal_dimensions = "inherit;inherit;inherit;inherit;inherit;inherit;inherit;inherit;inherit;inherit;inherit;inherit;inherit;inherit;inherit;inherit;inherit"
+            out_terminal_dimensions_str = "out1 inherit;out2 inherit;out3 inherit;out4 inherit;out5 inherit;out6 inherit;out7 inherit;out8 inherit;out9 inherit;out10 inherit;out11 inherit;out12 inherit;out13 inherit;out14 inherit;out15 inherit;out16 inherit;out17 inherit"
+            out_terminal_labels = "[(\'out1\', False), (\'out2\', False), (\'out3\', False), (\'out4\', False), (\'out5\', False), (\'out6\', False), (\'out7\', False), (\'out8\', False), (\'out9\', False), (\'out10\', False), (\'out11\', False), (\'out12\', False), (\'out13\', False), (\'out14\', False), (\'out15\', False), (\'out16\', False), (\'out17\', False)]"
+            out_terminal_properties = "real out1;real out2;real out3;int out4;real out5;real out6;real out7;real out8;inherit out9;inherit out10;inherit out11;inherit out12;inherit out13;inherit out14;inherit out15;inherit out16;inherit out17;"
+            output_fnc = "/*Begin code section*/
+out1 = va_m;
+out2 = vb_m;
+out3 = vc_m;
+out4 = enable;
+out5 = d1;
+out6 = d2;
+out7 = d3;
+out8 = sector;
+out9 = error;
+out10 = sextant;
+out11 = hyteresis;
+out12 = vag1;
+out13 = vag2;
+out14 = vbg1;
+out15 = vbg2;
+out16 = vcg1;
+out17 = vcg2;
+/*End code section*/"
+            update_fnc = "/*Begin code section*/
+va = M*ref_a/400;
+vb = M*ref_b/400;
+vc = M*ref_c/400;
+
+//line-to-line voltages
+vab = va-vb;
+vbc = vb-vc;
+
+v_alpha = 0.666666666666667*vab + 0.333333333333333*vbc;
+v_beta = 0.577350269189626*vbc;
+
+//sextant identification
+if(v_beta > 0)
+    {
+        if(v_beta - sqrt(3)*v_alpha>0)
+            {
+                if(v_beta + sqrt(3)*v_alpha>0)
+                    {
+                        sextant = 2;
+                    }
+                    else
+                        sextant = 3;
+            }
+            else sextant = 1;
+    }
+else
+    {
+        if(v_beta - sqrt(3)*v_alpha>0)
+            { 
+                sextant = 4;
+            }
+            else
+            {
+                if(v_beta + sqrt(3)*v_alpha>0)
+                    {
+                        sextant = 6;
+                    }
+                else
+                    {
+                        sextant = 5;
+                    }
+            }
+        }
+        
+        theta = (3.141592653589793/3)*(sextant - 1); 
+        v_alpha1 = v_alpha*cos(theta) + v_beta*sin(theta);
+        v_beta1 = v_alpha*(-sin(theta)) + v_beta*cos(theta);
+
+//sector identification        
+            if(v_beta1 - 3*sqrt(2)/8>=0)
+                sector = 4;
+            else 
+            {
+                if (-sqrt(3)*v_alpha1 + v_beta1 + 3*sqrt(2)/4 >= 0)
+                {
+                    if(sqrt(3)*v_alpha1 + v_beta1 - 3*sqrt(2)/4 >= 0)
+                        sector = 3;
+                    else
+                        sector = 1;
+                    }
+                    else
+                        sector = 2;
+                }
+ 
+ //equivaent currents when tranposed to sextant 1               
+        if(sextant == 1)
+        {
+            ia_eq = ia;
+            ib_eq = ib;
+            ic_eq = ic;
+            }
+        else if(sextant == 2)
+        {
+            ia_eq = -ic;
+            ib_eq = ia;
+            ic_eq = -ib;
+            }
+        else if(sextant == 3)
+        {
+            ia_eq = ib;
+            ib_eq = ic;
+            ic_eq = ia;
+            }
+        else if(sextant == 4)
+        {
+            ia_eq = -ia;
+            ib_eq = ib;
+            ic_eq = -ic;
+            }
+        else if(sextant == 5)
+        {
+            ia_eq = ic;
+            ib_eq = ia;
+            ic_eq = ib;
+            }
+        else if(sextant == 6)
+        {
+            ia_eq = -ib;
+            ib_eq = ic;
+            ic_eq = -ia;
+            }
+            
+//error = vc1 - 400;
+error = 400 - vc1;
+            if(error >= 0)
+                sign = 1;
+            else
+                sign = -1;
+            
+if(sign*error > delta)
+    hyteresis = 1;
+if(sign*error < delta)
+    hyteresis = 0;
+
+//define the duty cycles and the switching sequences
+    if(sector == 1)
+    {
+            //vector times
+            t1 = (1.732050807568877*v_beta1)*Ts_pwm; // vector v2
+            t2 = (1.5*v_alpha1 -0.866025403784439*v_beta1)*Ts_pwm; // vector v1
+            t3 = Ts_pwm - t1 - t2;     //null vector
+            
+            //vector duty cycles
+            d1 = t1/Ts_pwm;
+            d2 = t2/Ts_pwm;
+            d3 = t3/Ts_pwm; // null vector
+        
+if(hyteresis == 1)
+{
+        if(((vc2<=vc1) & (ia_eq <=0) & (ic_eq <=0)) || ((vc2>vc1) & (ia_eq > 0) & (ic_eq > 0)) ) // Case 1
+        {
+            //comparators that represent the offline-defined switching sequence for the sector
+            if(sextant == 1 || sextant == 3 || sextant == 5)
+            {
+                COMP1 = (d2)*TPER;
+                COMP2 = TPER;
+                COMP3 = 0.0;
+                COMP4 = TPER;
+                COMP5 = TPER;
+                COMP6 = (d2 + d3)*TPER;
+            }
+            else if(sextant == 2 || sextant == 4 || sextant == 6)
+            {
+                COMP1 = (d2)*TPER;
+                COMP2 = (d2 + d3)*TPER;
+                COMP3 = (d2)*TPER;
+                COMP4 = TPER;
+                COMP5 = 0.0;
+                COMP6 = (d2 + d3)*TPER;
+            }
+        }
+        else if (((vc2<=vc1) & (ia_eq <=0) & (ic_eq >0)) || ((vc2>vc1) & (ia_eq > 0) & (ic_eq <= 0))) // Case 2
+        {
+            //comparators that represent the offline-defined switching sequence for the sector
+            if(sextant == 1 || sextant == 3 || sextant == 5)
+            {
+                COMP1 = (d1 + d2)*TPER;
+                COMP2 = TPER;
+                COMP3 = (d1)*TPER;
+                COMP4 = TPER;
+                COMP5 = 0.0;
+                COMP6 = (d1 + d2 +d3)*TPER;
+            }
+            else if(sextant == 2 || sextant == 4 || sextant == 6)
+            {
+                COMP1 = (d2)*TPER;
+                COMP2 = TPER;
+                COMP3 = (d2 + d1)*TPER;
+                COMP4 = TPER;
+                COMP5 = 0.0;
+                COMP6 = TPER;
+            }
+        }
+        else if (((vc2<=vc1) & (ia_eq > 0) & (ic_eq <= 0)) || ((vc2>vc1) & (ia_eq <= 0) & (ic_eq > 0))) // Case 3
+        {
+            //comparators that represent the offline-defined switching sequence for the sector
+            if(sextant == 1 || sextant == 3 || sextant == 5)
+            {
+                COMP1 = 0.0;
+                COMP2 = (d1 + d2)*TPER;
+                COMP3 = 0.0;
+                COMP4 = (d1)*TPER;
+                COMP5 = 0.0;
+                COMP6 = 0.0;
+            }
+            else if(sextant == 2 || sextant == 4 || sextant == 6)
+            {
+                COMP1 = 0.0;
+                COMP2 = (d2)*TPER;
+                COMP3 = 0.0;
+                COMP4 = (d2 + d1)*TPER;
+                COMP5 = 0.0;
+                COMP6 = 0.0;
+            }
+        }
+        else if (((vc2<=vc1) & (ia_eq > 0) & (ic_eq > 0)) || ((vc2>vc1) & (ia_eq <= 0) & (ic_eq <= 0))) // Case 4
+        {
+            //comparators that represent the offline-defined switching sequence for the sector
+            if(sextant == 1 || sextant == 3 || sextant == 5)
+            {
+                COMP1 = (d1)*TPER;
+                COMP2 = TPER;
+                COMP3 = (d1)*TPER;
+                COMP4 = (d1 + d3)*TPER;
+                COMP5 = 0.0;
+                COMP6 = (d1 + d3)*TPER;
+            }
+            else if(sextant == 2 || sextant == 4 || sextant == 6)
+            {
+                COMP1 = 0.0;
+                COMP2 = TPER;
+                COMP3 = (d1)*TPER;
+                COMP4 = TPER;
+                COMP5 = 0.0;
+                COMP6 = (d1 + d2)*TPER;
+            }
+        }
+    }
+    else
+    {
+            if(sextant == 1 || sextant == 3 || sextant == 5)
+            {
+                COMP1 = (0.33333*d3 + 0.5*d1 + 0.5*d2)*TPER;
+                COMP2 = (0.66666*d3 + d1 + d2)*TPER;
+                COMP3 = (0.3333*d3 + 0.5*d1)*TPER;
+                COMP4 = (0.66666*d3 + d1 + 0.5*d2)*TPER;
+                COMP5 = (0.33333*d3)*TPER;
+                COMP6 = (0.66666*d3 +0.5* d1 + 0.5*d2)*TPER;
+            }
+            else if(sextant == 2 || sextant == 4 || sextant == 6)
+            {
+                COMP1 = (0.33333*d3 + 0.5*d2)*TPER;
+                COMP2 = (0.66666*d3 + 0.5*d1 + d2)*TPER;
+                COMP3 = (0.33333*d3 + 0.5*d1 + 0.5*d2)*TPER;
+                COMP4 = (0.66666*d3 + d1 + d2)*TPER;
+                COMP5 = (0.33333*d3)*TPER;
+                COMP6 = (0.66666*d3 + 0.5*d1 + 0.5*d2)*TPER;
+            }
+        }
+}       
+        else if(sector == 2)
+        {
+            //vector times
+            t1 = (1.732050807568877*v_beta1)*Ts_pwm;
+            t2 = (1.5*v_alpha1 - 0.866025403784439*v_beta1 -1)*Ts_pwm;
+            t3 = Ts_pwm - t1 - t2;     //vector v1
+            
+            //vector duty cycles
+            d1 = t1/Ts_pwm;
+            d2 = t2/Ts_pwm;
+            d3 = t3/Ts_pwm;
+            
+if(hyteresis == 1)
+{
+            if(((vc2<=vc1) & (ia_eq > 0)) || ((vc2>vc1) & (ia_eq <= 0))) // Case 1
+            {
+                if(sextant == 1 || sextant == 3 || sextant == 5)
+                {
+                //comparators that represent the offline-defined switching sequence for the sector
+                    COMP1 = (d1+d2)*TPER;
+                    COMP2 = TPER;
+                    COMP3 = 0.0;
+                    COMP4 = (d1)*TPER;
+                    COMP5 = 0.0;
+                    COMP6 = 0.0;
+                }
+                else if(sextant == 2 || sextant == 4 || sextant == 6)
+                {
+                    COMP1 = (d2)*TPER;
+                    COMP2 = TPER;
+                    COMP3 = (d2 + d1)*TPER;
+                    COMP4 = TPER;
+                    COMP5 = 0.0;
+                    COMP6 = 0.0;
+                }
+            }
+                
+            else if(((vc2<=vc1) & (ia_eq <= 0)) || ((vc2>vc1) & (ia_eq > 0))) // Case 2
+            {
+                if(sextant == 1 || sextant == 3 || sextant == 5)
+                {
+                    //comparators that represent the offline-defined switching sequence for the sector
+                    COMP1 = TPER;
+                    COMP2 = TPER;
+                    COMP3 = 0.0;
+                    COMP4 = (d3 + d1)*TPER;
+                    COMP5 = 0.0;
+                    COMP6 = (d3)*TPER;
+                }
+                else if(sextant == 2 || sextant == 4 || sextant == 6)
+                {
+                    COMP1 = (d3 + d2)*TPER;
+                    COMP2 = TPER;
+                    COMP3 = TPER;
+                    COMP4 = TPER;
+                    COMP5 = 0.0;
+                    COMP6 = (d3)*TPER;
+                }
+            }
+        }
+            else
+    {
+                if(sextant == 1 || sextant == 3 || sextant == 5)
+                {
+                //comparators that represent the offline-defined switching sequence for the sector
+                    COMP1 = (0.5*d3 + d1 + d2)*TPER;
+                    COMP2 = TPER;
+                    COMP3 = 0.0;
+                    COMP4 = (0.5*d3 + d1)*TPER;
+                    COMP5 = 0.0;
+                    COMP6 = (0.5*d3)*TPER;
+                }
+                else if(sextant == 2 || sextant == 4 || sextant == 6)
+                {
+                    COMP1 = (0.5*d3 + d2)*TPER;
+                    COMP2 = TPER;
+                    COMP3 = (0.5*d3 + d2 + d1)*TPER;
+                    COMP4 = TPER;
+                    COMP5 = 0.0;
+                    COMP6 = (0.5*d3)*TPER;
+                }
+        }
+    }
+    else if(sector == 3)
+    {
+            //vector times
+            t1 = (-1.732050807568877*v_beta1 + 1)*Ts_pwm;
+            t2 = (1.5*v_alpha1 + 0.866025403784439*v_beta1 -1)*Ts_pwm;
+            t3 = Ts_pwm - t1 - t2;     //vector v2
+            
+            //vector duty cycles
+            d1 = t1/Ts_pwm;
+            d2 = t2/Ts_pwm;
+            d3 = t3/Ts_pwm; // vector v1
+        
+if(hyteresis == 1)
+{        
+        if(((vc2<=vc1) & (ia_eq <=0) & (ic_eq <=0)) || ((vc2>vc1) & (ia_eq > 0) & (ic_eq > 0)) ) // Case 1
+        {
+            //comparators that represent the offline-defined switching sequence for the sector
+            if(sextant == 1 || sextant == 3 || sextant == 5)
+            {
+                COMP1 = (d3 + d2)*TPER;
+                COMP2 = TPER;
+                COMP3 = 0.0;
+                COMP4 = TPER;
+                COMP5 = 0.0;
+                COMP6 = (d3)*TPER;
+            }
+                else if(sextant == 2 || sextant == 4 || sextant == 6)
+                {
+                    COMP1 = (d3)*TPER;
+                    COMP2 = (d3 + d2)*TPER;
+                    COMP3 = (d3 + d2)*TPER;
+                    COMP4 = TPER;
+                    COMP5 = 0.0;
+                    COMP6 = (d3)*TPER;
+                }
+        }
+        else if (((vc2<=vc1) & (ia_eq <=0) & (ic_eq >0)) || ((vc2>vc1) & (ia_eq > 0) & (ic_eq <= 0))) // Case 2
+        {
+            //comparators that represent the offline-defined switching sequence for the sector
+            if(sextant == 1 || sextant == 3 || sextant == 5)
+            {
+                COMP1 = TPER;
+                COMP2 = TPER;
+                COMP3 = (d1)*TPER;
+                COMP4 = TPER;
+                COMP5 = 0.0;
+                COMP6 = (d3 + d1)*TPER;
+            }
+            else if(sextant == 2 || sextant == 4 || sextant == 6)
+            {
+                COMP1 = (d3)*TPER;
+                COMP2 = TPER;
+                COMP3 = TPER;
+                COMP4 = TPER;
+                COMP5 = 0.0;
+                COMP6 = (d1 + d3)*TPER;
+            }
+        }
+        else if (((vc2<=vc1) & (ia_eq > 0) & (ic_eq <= 0)) || ((vc2>vc1) & (ia_eq <= 0) & (ic_eq > 0))) // Case 3
+        {
+            //comparators that represent the offline-defined switching sequence for the sector
+            if(sextant == 1 || sextant == 3 || sextant == 5)
+            {
+                COMP1 = (d3)*TPER;
+                COMP2 = TPER;
+                COMP3 = (0.0)*TPER;
+                COMP4 = (d1 + d3)*TPER;
+                COMP5 = 0.0;
+                COMP6 = 0.0;
+            }
+            else if(sextant == 2 || sextant == 4 || sextant == 6)
+            {
+                COMP1 = 0.0;
+                COMP2 = (d2 + d3)*TPER;
+                COMP3 = (d2)*TPER;
+                COMP4 = TPER;
+                COMP5 = 0.0;
+                COMP6 = 0.0;
+            }
+        }
+        else if (((vc2<=vc1) & (ia_eq > 0) & (ic_eq > 0)) || ((vc2>vc1) & (ia_eq <= 0) & (ic_eq <= 0))) // Case 4
+        {
+            //comparators that represent the offline-defined switching sequence for the sector
+            if(sextant == 1 || sextant == 3 || sextant == 5)
+            {
+                COMP1 = (d3 + d2)*TPER;
+                COMP2 = TPER;
+                COMP3 = (d3)*TPER;
+                COMP4 = (d3 + d2)*TPER;
+                COMP5 = 0.0;
+                COMP6 = 0.0;
+            }
+            else if(sextant == 2 || sextant == 4 || sextant == 6)
+            {
+                COMP1 = 0.0;
+                COMP2 = TPER;
+                COMP3 = (d1 + d2)*TPER;
+                COMP4 = TPER;
+                COMP5 = 0.0;
+                COMP6 = (d1)*TPER;
+            }
+        }
+    }
+        else
+    {
+            if(sextant == 1 || sextant == 3 || sextant == 5)
+            {
+                COMP1 = (0.5*d3 + 0.5*d1 + d2)*TPER;
+                COMP2 = TPER;
+                COMP3 = (0.5*d3)*TPER;
+                COMP4 = (0.5*d1 + d2 +d3)*TPER;
+                COMP5 = 0.0;
+                COMP6 = (0.5*d3 + 0.5*d1)*TPER;
+            }
+                else if(sextant == 2 || sextant == 4 || sextant == 6)
+                {
+                COMP1 = (0.5*d1)*TPER;
+                COMP2 = (d1 + d2 + 0.5*d3)*TPER;
+                COMP3 = (0.5*d1 + d2 + 0.5*d3)*TPER;
+                COMP4 = TPER;
+                COMP5 = 0.0;
+                COMP6 = (0.5*d3 + 0.5*d1)*TPER;
+                }
+        }
+}        
+        else if(sector == 4)
+        {
+            //vector times
+            t1 = (1.732050807568877*v_beta1 - 1)*Ts_pwm; // vector v9
+            t2 = (1.5*v_alpha1 - 0.866025403784439*v_beta1)*Ts_pwm; // vector v8
+            t3 = Ts_pwm - t1 - t2;     //vector v2
+            
+            //vector duty cycles
+            d1 = t1/Ts_pwm;
+            d2 = t2/Ts_pwm;
+            d3 = t3/Ts_pwm;
+
+if(hyteresis == 1)
+{         
+            if(((vc2<=vc1) & (ic_eq > 0)) || ((vc2>vc1) & (ic_eq <= 0))) // Case 1
+            {
+                if(sextant == 1 || sextant == 3 || sextant == 5)
+                {
+                    //comparators that represent the offline-defined switching sequence for the sector
+                    COMP1 = TPER;
+                    COMP2 = TPER;
+                    COMP3 = (d3 + d1)*TPER;
+                    COMP4 = TPER;
+                    COMP5 = 0.0;
+                    COMP6 = (d3)*TPER;
+                }
+                else if(sextant == 2 || sextant == 4 || sextant == 6)
+                {
+                    COMP1 = 0.0;
+                    COMP2 = (d3 + d2)*TPER;
+                    COMP3 = TPER;
+                    COMP4 = TPER;
+                    COMP5 = 0.0;
+                    COMP6 = (d3)*TPER;
+                }
+            }
+                
+            else if(((vc2<=vc1) & (ic_eq <= 0)) || ((vc2>vc1) & (ic_eq > 0))) // Case 2
+            {
+                if(sextant == 1 || sextant == 3 || sextant == 5)
+                {
+                //comparators that represent the offline-defined switching sequence for the sector
+                    COMP1 = (d1+ d2)*TPER;
+                    COMP2 = TPER;
+                    COMP3 = (d1)*TPER;
+                    COMP4 = TPER;
+                    COMP5 = 0.0;
+                    COMP6 = 0.0;
+                }
+                else if(sextant == 2 || sextant == 4 || sextant == 6)
+                {
+                    COMP1 = 0.0;
+                    COMP2 = (d2)*TPER;
+                    COMP3 = (d2 + d1)*TPER;
+                    COMP4 = TPER;
+                    COMP5 = 0.0;
+                    COMP6 = 0.0;
+                }
+            }
+        }  
+         else
+    {
+                if(sextant == 1 || sextant == 3 || sextant == 5)
+                {
+                    //comparators that represent the offline-defined switching sequence for the sector
+                    COMP1 = (0.5*d3 + d1+ d2)*TPER;
+                    COMP2 = TPER;
+                    COMP3 = (0.5*d3 + d1)*TPER;
+                    COMP4 = TPER;
+                    COMP5 = 0.0;
+                    COMP6 = (0.5*d3)*TPER;
+                }
+                else if(sextant == 2 || sextant == 4 || sextant == 6)
+                {
+                    COMP1 = 0.0;
+                    COMP2 = (0.5*d3 + d2)*TPER;
+                    COMP3 = (0.5*d3 + d1 + d2)*TPER;
+                    COMP4 = TPER;
+                    COMP5 = 0.0;
+                    COMP6 = (0.5*d3)*TPER;
+                }
+        }   
+    }    
+    // translates the comparators according to the sextants.
+    if(sextant == 1 || sextant == 2)
+    {
+         COMPs1a = COMP1;
+         COMPs2a = COMP2;
+         COMPs1b = COMP3;
+         COMPs2b = COMP4;
+         COMPs1c = COMP5;
+         COMPs2c = COMP6;
+        }
+        else if(sextant == 3 || sextant == 4)
+    {
+         COMPs1a = COMP5;
+         COMPs2a = COMP6;
+         COMPs1b = COMP1;
+         COMPs2b = COMP2 ;
+         COMPs1c = COMP3;
+         COMPs2c = COMP4;
+        }
+        else if(sextant == 5 || sextant == 6)
+    {
+         COMPs1a = COMP3;
+         COMPs2a = COMP4;
+         COMPs1b = COMP5;
+         COMPs2b = COMP6;
+         COMPs1c = COMP1;
+         COMPs2c = COMP2;
+        }
+                
+vag1 = COMPs1a;
+vag2 = COMPs2a;
+vbg1 = COMPs1b;
+vbg2 = COMPs2b;
+vcg1 = COMPs1c;
+vcg2 = COMPs2c;
+    
+va_m = vag1 + vag2;
+vb_m = vbg1 + vbg2;
+vc_m = vcg1 + vcg2;
+    
+enable = 1;
+/*End code section*/"
+        }
+        [
+            position = 7384, 7672
+            size = 48, 288
+        ]
+
+        component src_sine ref_a {
+            amplitude = "400"
+            execution_rate = "5.0000e-05"
+            frequency = "60"
+        }
+        [
+            position = 7256, 7512
+        ]
+
+        component src_sine ref_b {
+            amplitude = "400"
+            execution_rate = "5.0000e-05"
+            frequency = "60"
+            phase = "-120"
+        }
+        [
+            position = 7192, 7544
+        ]
+
+        component src_sine ref_c {
+            amplitude = "400"
+            execution_rate = "5.0000e-05"
+            frequency = "60"
+            phase = "120"
+        }
+        [
+            position = 7120, 7576
+        ]
+
+        component gen_probe d1 {
+            signal_type = "voltage"
+        }
+        [
+            position = 7656, 7576
+        ]
+
+        component gen_probe d2 {
+            signal_type = "voltage"
+        }
+        [
+            position = 7720, 7576
+        ]
+
+        component gen_probe d3 {
+            signal_type = "voltage"
+        }
+        [
+            position = 7792, 7576
+        ]
+
+        component gen_probe va_ref {
+            signal_type = "voltage"
+        }
+        [
+            position = 7496, 7480
+        ]
+
+        component gen_probe vb_ref {
+            signal_type = "voltage"
+        }
+        [
+            position = 7576, 7480
+        ]
+
+        component gen_probe vc_ref {
+            signal_type = "voltage"
+        }
+        [
+            position = 7640, 7480
+        ]
+
+        component src_scada_input "modulation index" {
+            execution_rate = "5.0000e-05"
+            max = "5"
+            min = "0"
+            unit = ""
+        }
+        [
+            position = 7216, 7816
+        ]
+
+        component "core/Voltage Measurement" Vc2 {
+            execution_rate = "5.0000e-05"
+            feed_forward = "true"
+            sig_output = "True"
+        }
+        [
+            position = 7424, 8136
+            rotation = left
+            scale = -1, -1
+            size = 64, 32
+        ]
+
+        component "core/Variable Resistor" Rc {
+            inductance = "1e-9"
+        }
+        [
+            position = 8872, 8368
+            size = 64, 48
+        ]
+
+        component "core/Variable Resistor" Ra {
+            inductance = "1e-9"
+        }
+        [
+            position = 8872, 8176
+            size = 64, 48
+        ]
+
+        component pas_inductor Lc1 {
+            inductance = "80e-6"
+            initial_current = "0"
+        }
+        [
+            position = 8160, 8368
+        ]
+
+        component "core/NPC Leg" LegA {
+            carr_ph_offset = "0"
+            carrier_freq = "10000"
+            ctrl_src = "Internal modulator"
+            d_time = ".5e-6"
+            ref_sig_min_max = "[0, 100.0]"
+        }
+        [
+            position = 7744, 8184
+            size = 127, 256
+        ]
+
+        component pas_inductor Lc2 {
+            inductance = "70e-6"
+        }
+        [
+            position = 8664, 8368
+        ]
+
+        component pas_inductor Lb1 {
+            inductance = "80e-6"
+        }
+        [
+            position = 8160, 8272
+        ]
+
+        component src_ground gnd1 {
+        }
+        [
+            position = 9184, 8272
+            rotation = left
+        ]
+
+        component pas_capacitor Cb {
+            capacitance = "100e-6"
+        }
+        [
+            position = 8544, 8544
+            rotation = right
+        ]
+
+        component "core/NPC Leg" LegB {
+            carr_ph_offset = "0"
+            carrier_freq = "10000"
+            ctrl_src = "Internal modulator"
+            d_time = ".5e-6"
+            ref_sig_min_max = "[0, 100.0]"
+        }
+        [
+            position = 7744, 8520
+            size = 127, 256
+        ]
+
+        component "core/Voltage Measurement" Vc1 {
+            execution_rate = "5.0000e-05"
+            feed_forward = "true"
+            sig_output = "True"
+        }
+        [
+            position = 7424, 8240
+            rotation = left
+            scale = -1, -1
+            size = 64, 32
+        ]
+
+        component "core/Variable Resistor" Rb {
+            inductance = "1e-9"
+        }
+        [
+            position = 8872, 8272
+            size = 64, 48
+        ]
+
+        component "core/Variable Inductor" Lc {
+            resistance = "100"
+        }
+        [
+            position = 9000, 8368
+            size = 64, 48
+        ]
+
+        component "core/Current Measurement" Ia2 {
+            execution_rate = "5.0000e-05"
+            feed_forward = "true"
+        }
+        [
+            position = 8744, 8176
+            size = 64, 32
+        ]
+
+        component "core/Current Measurement" Ib2 {
+            execution_rate = "5.0000e-05"
+            feed_forward = "true"
+        }
+        [
+            position = 8752, 8272
+            size = 64, 32
+        ]
+
+        component pas_resistor Rin {
+            resistance = "0.01"
+        }
+        [
+            position = 7088, 8048
+        ]
+
+        component "core/Three Phase Core Coupling" "Core Coupling 1" {
+            L1 = "1"
+            R1 = "1"
+        }
+        [
+            position = 8264, 8272
+            rotation = down
+            size = 12, 256
+        ]
+
+        component "core/Variable Inductor" La {
+            resistance = "100"
+        }
+        [
+            position = 9000, 8176
+            size = 64, 48
+        ]
+
+        component "core/NPC Leg" LegC {
+            carr_ph_offset = "0"
+            carrier_freq = "10000"
+            ctrl_src = "Internal modulator"
+            d_time = ".5e-6"
+            ref_sig_min_max = "[0, 100.0]"
+        }
+        [
+            position = 7736, 8952
+            size = 127, 256
+        ]
+
+        component pas_capacitor C2 {
+            capacitance = "18.8e-2"
+            initial_voltage = "400"
+        }
+        [
+            position = 7296, 8128
+            rotation = right
+        ]
+
+        component "core/Voltage Measurement" Vbc {
+            execution_rate = "3.968253968253968e-04"
+            feed_forward = "true"
+        }
+        [
+            position = 8016, 8320
+            rotation = left
+            scale = 1, -1
+            size = 64, 32
+        ]
+
+        component src_scada_input resistance {
+            execution_rate = "5.0000e-05"
+            max = "100"
+            min = "0"
+            unit = ""
+        }
+        [
+            position = 8912, 7944
+        ]
+
+        component "core/Variable Inductor" Lb {
+            resistance = "100"
+        }
+        [
+            position = 8992, 8272
+            size = 64, 48
+        ]
+
+        component src_scada_input inductance {
+            execution_rate = "5.0000e-05"
+            max = "40e-3"
+            min = "50e-6"
+            unit = ""
+        }
+        [
+            position = 8912, 8016
+        ]
+
+        component "core/Current Measurement" Ic2 {
+            execution_rate = "5.0000e-05"
+            feed_forward = "true"
+        }
+        [
+            position = 8760, 8368
+            size = 64, 32
+        ]
+
+        component "core/Current Measurement" Ib1 {
+            execution_rate = "5.0000e-05"
+            feed_forward = "true"
+            sig_output = "True"
+        }
+        [
+            position = 8368, 8272
+            size = 64, 32
+        ]
+
+        component "core/Current Measurement" Ic1 {
+            execution_rate = "5.0000e-05"
+            feed_forward = "true"
+            sig_output = "True"
+        }
+        [
+            position = 8368, 8368
+            size = 64, 32
+        ]
+
+        component src_voltage Vs1 {
+        }
+        [
+            position = 7032, 8168
+            rotation = right
+        ]
+
+        component pas_inductor La1 {
+            inductance = "80e-6"
+            initial_current = "0"
+        }
+        [
+            position = 8152, 8176
+        ]
+
+        component pas_inductor La2 {
+            inductance = "70e-6"
+        }
+        [
+            position = 8656, 8176
+        ]
+
+        component pas_capacitor C1 {
+            capacitance = "18.8e-2"
+            initial_voltage = "400"
+        }
+        [
+            position = 7296, 8240
+            rotation = right
+        ]
+
+        component pas_capacitor Cc {
+            capacitance = "100e-6"
+        }
+        [
+            position = 8616, 8544
+            rotation = right
+        ]
+
+        component "core/Voltage Measurement" Vab {
+            execution_rate = "3.968253968253968e-04"
+            feed_forward = "true"
+        }
+        [
+            position = 8016, 8216
+            rotation = left
+            scale = 1, -1
+            size = 64, 32
+        ]
+
+        component "core/Current Measurement" Ia1 {
+            execution_rate = "5.0000e-05"
+            feed_forward = "true"
+            sig_output = "True"
+        }
+        [
+            position = 8368, 8176
+            size = 64, 32
+        ]
+
+        component pas_capacitor Ca {
+            capacitance = "100e-6"
+        }
+        [
+            position = 8472, 8544
+            rotation = right
+        ]
+
+        component pas_inductor Lb2 {
+            inductance = "70e-6"
+        }
+        [
+            position = 8664, 8272
+        ]
+
+        component gen_probe sector {
+            signal_type = "voltage"
+        }
+        [
+            position = 7864, 7616
+        ]
+
+        component gen_probe error {
+            signal_type = "voltage"
+        }
+        [
+            position = 7976, 7648
+        ]
+
+        component gen_probe hysteresis {
+            signal_type = "voltage"
+        }
+        [
+            position = 7784, 7704
+        ]
+
+        component gen_probe sextant {
+            signal_type = "voltage"
+        }
+        [
+            position = 7840, 7688
+        ]
+
+        component pas_resistor Rin1 {
+            resistance = "10000"
+        }
+        [
+            position = 7176, 8136
+            rotation = right
+        ]
+
+        component pas_resistor Rin2 {
+            resistance = "10000"
+        }
+        [
+            position = 7176, 8248
+            rotation = right
+        ]
+
+        component "core/Current Measurement" I_mid_DC {
+            feed_forward = "true"
+        }
+        [
+            position = 7360, 8184
+            size = 64, 32
+        ]
+
+        tag F7 {
+            value = "ib"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 7080, 7680
+        ]
+
+        tag F8 {
+            value = "ic"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 7080, 7720
+        ]
+
+        tag F9 {
+            value = "vc1"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 7200, 7720
+        ]
+
+        tag F10 {
+            value = "vc2"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 7200, 7760
+        ]
+
+        tag Goto15 {
+            value = "enable"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 7480, 7592
+        ]
+
+        tag Goto16 {
+            value = "vag1"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 7616, 7720
+        ]
+
+        tag Goto17 {
+            value = "vag2"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 7680, 7752
+        ]
+
+        tag Goto18 {
+            value = "vbg2"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 7624, 7832
+        ]
+
+        tag Goto19 {
+            value = "vbg1"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 7624, 7784
+        ]
+
+        tag Goto20 {
+            value = "vcg1"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 7624, 7880
+        ]
+
+        tag Goto21 {
+            value = "vcg2"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 7624, 7920
+        ]
+
+        tag F18 {
+            value = "vcg1"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 7848, 8752
+            rotation = down
+        ]
+
+        tag F12 {
+            value = "enable"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 7672, 8368
+        ]
+
+        tag Goto33 {
+            value = "inductance"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 9000, 8016
+        ]
+
+        tag Goto32 {
+            value = "resistance"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 9000, 7944
+        ]
+
+        tag F23 {
+            value = "inductance"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 9072, 8112
+            rotation = down
+        ]
+
+        tag F17 {
+            value = "vbg2"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 7872, 8376
+            rotation = down
+        ]
+
+        tag F21 {
+            value = "resistance"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 8944, 8200
+            rotation = down
+        ]
+
+        tag F14 {
+            value = "vag1"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 7744, 7960
+            rotation = right
+        ]
+
+        tag F20 {
+            value = "resistance"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 8920, 8080
+            rotation = down
+        ]
+
+        tag F24 {
+            value = "inductance"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 9096, 8216
+            rotation = down
+        ]
+
+        tag F15 {
+            value = "vag2"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 7800, 7960
+            rotation = right
+        ]
+
+        tag F19 {
+            value = "vcg2"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 7840, 8792
+            rotation = down
+        ]
+
+        tag F22 {
+            value = "resistance"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 8936, 8320
+            rotation = down
+        ]
+
+        tag F13 {
+            value = "enable"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 7672, 8752
+        ]
+
+        tag F11 {
+            value = "enable"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 7688, 8024
+        ]
+
+        tag F16 {
+            value = "vbg1"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 7840, 8328
+            rotation = down
+        ]
+
+        tag F25 {
+            value = "inductance"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 9088, 8320
+            rotation = down
+        ]
+
+        tag Goto13 {
+            value = "vc2"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 7520, 8136
+        ]
+
+        tag Goto14 {
+            value = "vc1"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 7528, 8240
+        ]
+
+        tag Goto10 {
+            value = "ia"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 8416, 8120
+        ]
+
+        tag Goto11 {
+            value = "ib"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 8416, 8232
+        ]
+
+        tag Goto12 {
+            value = "ic"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 8424, 8312
+        ]
+
+        tag F6 {
+            value = "ia"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 7128, 7648
+        ]
+
+        junction Junction135 pe
+        [
+            position = 7584, 8184
+        ]
+
+        junction Junction140 pe
+        [
+            position = 8016, 8272
+        ]
+
+        junction Junction142 pe
+        [
+            position = 8008, 8368
+        ]
+
+        junction Junction121 pe
+        [
+            position = 9048, 8280
+        ]
+
+        junction Junction126 pe
+        [
+            position = 7296, 8296
+        ]
+
+        junction Junction112 pe
+        [
+            position = 9048, 8272
+        ]
+
+        junction Junction134 pe
+        [
+            position = 7616, 8048
+        ]
+
+        junction Junction137 pe
+        [
+            position = 7632, 8424
+        ]
+
+        junction Junction125 pe
+        [
+            position = 7296, 8048
+        ]
+
+        junction Junction138 pe
+        [
+            position = 7600, 8520
+        ]
+
+        junction Junction131 pe
+        [
+            position = 7424, 8048
+        ]
+
+        junction Junction144 pe
+        [
+            position = 8544, 8272
+        ]
+
+        junction Junction120 pe
+        [
+            position = 8472, 8192
+        ]
+
+        junction Junction130 pe
+        [
+            position = 7424, 8296
+        ]
+
+        junction Junction127 pe
+        [
+            position = 7424, 8184
+        ]
+
+        junction Junction145 pe
+        [
+            position = 8616, 8368
+        ]
+
+        junction Junction136 pe
+        [
+            position = 7552, 8296
+        ]
+
+        junction Junction139 pe
+        [
+            position = 7552, 8616
+        ]
+
+        junction Junction141 pe
+        [
+            position = 8016, 8272
+        ]
+
+        junction Junction146 pe
+        [
+            position = 7168, 8048
+        ]
+
+        junction Junction147 pe
+        [
+            position = 7296, 8184
+        ]
+
+        junction Junction148 pe
+        [
+            position = 7176, 8192
+        ]
+
+        junction Junction149 pe
+        [
+            position = 7176, 8296
+        ]
+
+        junction Junction150 pe
+        [
+            position = 7424, 8184
+        ]
+
+        junction Junction151 pe
+        [
+            position = 7296, 8184
+        ]
+
+        connect "C function1.out4" Goto15 as Connection2930
+        connect Goto16 "C function1.out12" as Connection2934
+        connect "C function1.out13" Goto17 as Connection2935
+        [
+            breakpoints = 7560, 7752
+        ]
+        connect "C function1.out14" Goto19 as Connection2936
+        [
+            breakpoints = 7536, 7752; 7568, 7784
+        ]
+        connect "C function1.out15" Goto18 as Connection2937
+        [
+            breakpoints = 7424, 7768; 7528, 7768; 7528, 7832
+        ]
+        connect "C function1.out16" Goto20 as Connection2938
+        [
+            breakpoints = 7512, 7784; 7584, 7880
+        ]
+        connect "C function1.out17" Goto21 as Connection2939
+        [
+            breakpoints = 7496, 7848; 7536, 7920
+        ]
+        connect Vbc.p_node Junction141 as Connection3354
+        connect gnd1.node Junction121 as Connection3254
+        [
+            breakpoints = 9144, 8272; 9048, 8272
+        ]
+        connect Junction121 Junction112 as Connection3253
+        connect Junction139 Junction136 as Connection3346
+        [
+            breakpoints = 7552, 8584
+        ]
+        connect Junction131 Junction125 as Connection3320
+        [
+            breakpoints = 7424, 8048; 7424, 8048; 7424, 8048; 7424, 8048
+        ]
+        connect "Core Coupling 1.b_in" Ib1.p_node as Connection3216
+        connect LegC.DC+ Junction137 as Connection3341
+        connect Ic2.p_node Lc2.n_node as Connection3236
+        [
+            breakpoints = 8704, 8368
+        ]
+        connect Cb.p_node Junction144 as Connection3368
+        connect Goto32 resistance.out as Connection3376
+        connect Junction112 Lc.n_node as Connection3175
+        connect Cc.n_node Cb.n_node as Connection3124
+        connect Junction130 Junction126 as Connection3316
+        [
+            breakpoints = 7424, 8296; 7424, 8296; 7296, 8296
+        ]
+        connect "Core Coupling 1.c_out" La1.n_node as Connection3214
+        connect F23 La.In as Connection3381
+        connect Junction141 Junction140 as Connection3355
+        connect Vc1.n_node Junction130 as Connection3315
+        connect F16 LegB.In1 as Connection2942
+        connect Junction134 Junction131 as Connection3331
+        [
+            breakpoints = 7424, 8048
+        ]
+        connect Lc1.p_node Junction142 as Connection3358
+        connect Goto33 inductance.out as Connection3377
+        connect Junction140 Vab.n_node as Connection3352
+        connect F21 Rb.In as Connection3379
+        [
+            breakpoints = 8872, 8240
+        ]
+        connect F22 Rc.In as Connection3380
+        connect "Core Coupling 1.b_out" Lb1.n_node as Connection3219
+        connect Junction145 Cc.p_node as Connection3371
+        [
+            breakpoints = 8616, 8368
+        ]
+        connect F25 Lc.In as Connection3383
+        connect LegA.DC- Junction136 as Connection3336
+        [
+            breakpoints = 7664, 8296
+        ]
+        connect "Core Coupling 1.a_in" Ic1.p_node as Connection3217
+        connect F24 Lb.In as Connection3382
+        connect Lb.n_node Junction112 as Connection3176
+        connect LegB.DC- Junction139 as Connection3345
+        connect F14 LegA.In1 as Connection3322
+        connect F13 LegC.En as Connection2933
+        connect C1.n_node Junction126 as Connection3281
+        connect LegB.DCn Junction138 as Connection3342
+        connect Lc2.p_node Junction145 as Connection3370
+        connect LegA.DC+ Junction134 as Connection3330
+        [
+            breakpoints = 7664, 8048
+        ]
+        connect LegC.DCn Junction138 as Connection3344
+        [
+            breakpoints = 7600, 8928; 7600, 8520
+        ]
+        connect Ib1.n_node Junction144 as Connection3366
+        connect Junction142 Vbc.n_node as Connection3359
+        [
+            breakpoints = 8016, 8360
+        ]
+        connect LegB.OUT Junction141 as Connection3356
+        [
+            breakpoints = 7928, 8416
+        ]
+        connect Vc2.n_node Junction127 as Connection3306
+        connect Junction125 C2.p_node as Connection3276
+        [
+            breakpoints = 7296, 8048; 7296, 8072
+        ]
+        connect LegB.DC+ Junction137 as Connection3339
+        connect Junction144 Lb2.p_node as Connection3367
+        [
+            breakpoints = 8544, 8272; 8616, 8272
+        ]
+        connect "Core Coupling 1.a_out" Lc1.n_node as Connection3218
+        connect Junction136 Junction130 as Connection3337
+        [
+            breakpoints = 7424, 8296
+        ]
+        connect La.n_node Junction121 as Connection3252
+        connect LegC.DC- Junction139 as Connection3347
+        [
+            breakpoints = 7552, 9000
+        ]
+        connect Lb1.p_node Junction140 as Connection3351
+        connect "Core Coupling 1.c_in" Ia1.p_node as Connection3215
+        connect Junction127 Vc1.p_node as Connection3307
+        [
+            breakpoints = 7424, 8176; 7424, 8176
+        ]
+        connect Junction138 Junction135 as Connection3343
+        [
+            breakpoints = 7584, 8480
+        ]
+        connect Vc2.p_node Junction131 as Connection3319
+        [
+            breakpoints = 7424, 8080; 7424, 8080; 7424, 8080
+        ]
+        connect Ia2.p_node La2.n_node as Connection3233
+        connect Junction137 Junction134 as Connection3340
+        [
+            breakpoints = 7616, 8392; 7616, 8048
+        ]
+        connect F12 LegB.En as Connection2932
+        [
+            breakpoints = 7728, 8384
+        ]
+        connect Ca.n_node Cb.n_node as Connection3125
+        connect Junction120 La2.p_node as Connection3247
+        [
+            breakpoints = 8472, 8176; 8608, 8176
+        ]
+        connect LegA.OUT Vab.p_node as Connection3348
+        [
+            breakpoints = 7824, 8176; 7984, 8176
+        ]
+        connect Ib2.p_node Lb2.n_node as Connection3234
+        connect F20 Ra.In as Connection3378
+        connect F19 LegC.In2 as Connection2945
+        connect Ca.p_node Junction120 as Connection3246
+        connect F17 LegB.In2 as Connection2943
+        connect La1.p_node Vab.p_node as Connection3349
+        [
+            breakpoints = 8104, 8176; 8048, 8176
+        ]
+        connect F11 LegA.En as Connection2931
+        connect F18 LegC.In1 as Connection2944
+        connect Ia1.n_node Junction120 as Connection3248
+        connect F15 LegA.In2 as Connection3323
+        [
+            breakpoints = 7760, 8000; 7760, 8048
+        ]
+        connect LegA.DCn Junction135 as Connection3333
+        connect Ic1.n_node Junction145 as Connection3372
+        connect LegC.OUT Junction142 as Connection3360
+        [
+            breakpoints = 7960, 8944
+        ]
+        connect Rin.p_node Vs1.p_node as Connection2816
+        [
+            breakpoints = 7032, 8080; 7032, 8112
+        ]
+        connect Goto13 Vc2.out as Connection3384
+        [
+            breakpoints = 7472, 8136; 7456, 8136
+        ]
+        connect Goto14 Vc1.out as Connection3385
+        connect Goto10 Ia1.out as Connection3386
+        connect Goto11 Ib1.out as Connection3387
+        connect Goto12 Ic1.out as Connection3388
+        connect ref_a.out "C function1.ref_a" as Connection3389
+        connect ref_b.out "C function1.ref_b" as Connection3390
+        [
+            breakpoints = 7224, 7544; 7328, 7544; 7328, 7600
+        ]
+        connect "C function1.ref_c" ref_c.out as Connection3391
+        [
+            breakpoints = 7312, 7584
+        ]
+        connect F6 "C function1.ia" as Connection3392
+        connect F7 "C function1.ib" as Connection3393
+        connect F8 "C function1.ic" as Connection3394
+        [
+            breakpoints = 7128, 7696; 7344, 7696
+        ]
+        connect "C function1.vc1" F9 as Connection3395
+        connect "C function1.vc2" F10 as Connection3396
+        connect "C function1.M" "modulation index.out" as Connection3397
+        connect va_ref.in "C function1.out1" as Connection3398
+        connect "C function1.out2" vb_ref.in as Connection3399
+        [
+            breakpoints = 7520, 7560; 7520, 7480
+        ]
+        connect vc_ref.in "C function1.out3" as Connection3400
+        [
+            breakpoints = 7608, 7480; 7608, 7576
+        ]
+        connect "C function1.out5" d1.in as Connection3401
+        connect d2.in "C function1.out6" as Connection3402
+        [
+            breakpoints = 7688, 7624; 7424, 7624
+        ]
+        connect "C function1.out7" d3.in as Connection3403
+        connect "C function1.out11" hysteresis.in as Connection2985
+        connect "C function1.out9" error.in as Connection2987
+        [
+            breakpoints = 7424, 7672; 7792, 7672; 7792, 7648; 7944, 7648
+        ]
+        connect sector.in "C function1.out8" as Connection3404
+        [
+            breakpoints = 7776, 7624; 7768, 7656
+        ]
+        connect "C function1.out10" sextant.in as Connection3405
+        connect Ra.p_node Ia2.n_node as Connection3425
+        [
+            breakpoints = 8808, 8176
+        ]
+        connect La.p_node Ra.n_node as Connection3424
+        [
+            breakpoints = 8944, 8176
+        ]
+        connect Ib2.n_node Rb.p_node as Connection3426
+        [
+            breakpoints = 8816, 8272
+        ]
+        connect Rb.n_node Lb.p_node as Connection3427
+        [
+            breakpoints = 8936, 8272
+        ]
+        connect Rc.p_node Ic2.n_node as Connection3428
+        [
+            breakpoints = 8824, 8368
+        ]
+        connect Lc.p_node Rc.n_node as Connection3429
+        [
+            breakpoints = 8920, 8368; 8920, 8368
+        ]
+        connect Rin.n_node Junction146 as Connection3430
+        connect Junction146 Junction125 as Connection3431
+        connect Rin1.p_node Junction146 as Connection3432
+        connect C2.n_node Junction147 as Connection3433
+        connect Rin1.n_node Junction148 as Connection3436
+        connect Junction148 Junction147 as Connection3437
+        connect Rin2.p_node Junction148 as Connection3438
+        connect Vs1.n_node Junction149 as Connection3439
+        connect Junction149 Junction126 as Connection3440
+        connect Rin2.n_node Junction149 as Connection3441
+        connect Junction135 Junction150 as Connection3444
+        [
+            breakpoints = 7584, 8184
+        ]
+        connect Junction150 Junction127 as Connection3445
+        [
+            breakpoints = 7424, 8184
+        ]
+        connect I_mid_DC.n_node Junction150 as Connection3446
+        connect C1.p_node Junction151 as Connection3447
+        [
+            breakpoints = 7296, 8192
+        ]
+        connect Junction151 Junction147 as Connection3448
+        connect I_mid_DC.p_node Junction151 as Connection3449
+    }
+
+    default {
+        gen_c_function {
+            in_terminal_properties = "real in;"
+            in_terminal_labels = ""
+            out_terminal_properties = "real out;"
+            out_terminal_labels = ""
+            no_feed_inputs = ""
+            no_feed_outputs = ""
+            in_terminal_dimensions = ""
+            in_terminal_dimensions_str = ""
+            out_terminal_dimensions = ""
+            out_terminal_dimensions_str = ""
+            output_fnc = ""
+            update_fnc = ""
+            init_fnc = ""
+            global_variables = ""
+            parameters = ""
+            execution_rate = "inherit"
+        }
+
+        gen_probe {
+            addr = "0"
+            override_signal_name = "False"
+            signal_name = ""
+            signal_type = "generic"
+            streaming_en = "False"
+            streaming_er_idx = "0"
+            execution_rate = "inherit"
+        }
+
+        pas_capacitor {
+            capacitance = "1e-6"
+            initial_voltage = "0"
+            pole_shift_ignore = "False"
+            visible = "True"
+        }
+
+        pas_inductor {
+            inductance = "1e-3"
+            initial_current = "0.0"
+            pole_shift_ignore = "False"
+            visible = "True"
+        }
+
+        pas_resistor {
+            resistance = "1"
+        }
+
+        src_scada_input {
+            addr = "0"
+            format = "real"
+            override_signal_name = "False"
+            signal_name = ""
+            signal_type = "real"
+            min = "-1e6"
+            max = "1e6"
+            def_value = "0"
+            unit = " "
+            execution_rate = "100e-6"
+        }
+
+        src_sine {
+            amplitude = "1"
+            dc_offset = "0"
+            frequency = "50"
+            phase = "0"
+            execution_rate = "100e-6"
+        }
+
+        src_voltage {
+            sig_input = "False"
+            type = "signal generator"
+            param_set = "1phase"
+            parent_label = ""
+            addr = "0"
+            spc_nb = "0"
+            execution_rate = "100e-6"
+            cpd_visible = "True"
+            enable_snb = "False"
+            snb_type = "R2"
+            R2 = "0.0"
+            L1 = "0.1"
+            override_signal_name = "False"
+            signal_name = ""
+            init_source_nature = "Constant"
+            init_const_value = "0.0"
+            init_rms_value = "0.0"
+            init_frequency = "50.0"
+            init_phase = "0.0"
+        }
+
+        "core/Voltage Measurement" {
+            bw_limit = "False"
+            frequency = "10e3"
+            comparator_enable = "False"
+            operator = "greater"
+            threshold = "0"
+            cmp_abs_value = "False"
+            feed_forward = "false"
+            sig_output = "False"
+            execution_rate = "100e-6"
+            addr = "0"
+            nd_msr_estimation = "false"
+            dev_cpl_msr = "false"
+            host_device = "0"
+            output_to_device = "0"
+            dev_cpl_index = "0"
+            dev_cpl_var_nb = "0"
+            visible = "True"
+            override_signal_name = "False"
+            signal_name = ""
+        }
+
+        "core/NPC Leg" {
+            ctrl_src = "Digital input per switch"
+            op_mode = "Fixed carrier frequency"
+            carrier_freq = "10000.0"
+            carr_ph_offset = "0.0"
+            d_time = "5e-6"
+            ref_sig_min_max = "[0, 1.0]"
+            execution_rate = "inherit"
+            S1 = "1"
+            S1_logic = "active high"
+            S2 = "2"
+            S2_logic = "active high"
+            S3 = "3"
+            S3_logic = "active high"
+            S4 = "4"
+            S4_logic = "active high"
+            control_property = "all high"
+            pwm_enabling = "False"
+            pwm_enable_di = "13"
+            pwm_enable_inv = "active high"
+            dtv_flag_en = "True"
+            PESB_Optimization = "True"
+            show_monitoring = "false"
+        }
+
+        "core/Current Measurement" {
+            bw_limit = "False"
+            frequency = "10e3"
+            comparator_enable = "False"
+            operator = "greater"
+            threshold = "0"
+            cmp_abs_value = "False"
+            feed_forward = "false"
+            sig_output = "False"
+            execution_rate = "100e-6"
+            addr = "0"
+            nd_msr_estimation = "false"
+            dev_cpl_msr = "false"
+            host_device = "0"
+            output_to_device = "0"
+            dev_cpl_index = "0"
+            dev_cpl_var_nb = "0"
+            visible = "True"
+            override_signal_name = "False"
+            signal_name = ""
+        }
+
+        "core/Variable Resistor" {
+            inductance = "1e-3"
+            initial_current = "0.0"
+        }
+
+        "core/Variable Inductor" {
+            initial_flux = "0.0"
+            enb_resistance = "True"
+            resistance = "100.0"
+        }
+
+        "core/Three Phase Core Coupling" {
+            snb_type_i = "none"
+            R1 = "100e3"
+            C1 = "1e-06"
+            C2 = "1e-06"
+            fixed_snb_i = "false"
+            snb_type_u = "none"
+            R2 = "0.1"
+            L1 = "0.1"
+            L2 = "0.1"
+            fixed_snb_u = "false"
+            cpl_connection = "star"
+        }
+    }
+}

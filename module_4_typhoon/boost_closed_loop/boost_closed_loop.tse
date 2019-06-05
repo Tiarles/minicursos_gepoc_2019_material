@@ -1,0 +1,762 @@
+version = 4.2
+
+//
+// Saved by sw version: 2019.1
+// Save timestamp: 06-May-2019 @ 04:21:18 PM
+//
+
+model "boost_closed_loop" {
+    configuration {
+        hil_device = "HIL402"
+        hil_configuration_id = 1
+        simulation_method = exact
+        simulation_time_step = auto
+        simulation_discret_scaling = 1.0
+        dsp_timer_periods = 100e-6, 50e-3
+        ss_calc_method = "systematic elimination"
+        enb_pole_shift = True
+        enb_gds_oversampling = True
+        show_modes = False
+        device_ao_limit_enable = False
+        cpl_stb = False
+        enb_dep_sw_detect = False
+        code_section = "internal memory"
+        data_section = "internal memory"
+        sys_sp_rate_1 = 0.0001
+        sys_sp_rate_2 = 0.05
+        sys_real_type_precision = "default"
+        user_real_type_precision = "default"
+        sys_cpu_optimization = "high"
+        user_cpu_optimization = "high"
+    }
+
+    component Subsystem "My model" {
+        component src_voltage Vin {
+            param_set = ""
+        }
+        [
+            position = 1632, 1872
+            rotation = right
+        ]
+
+        component pas_inductor L {
+        }
+        [
+            position = 1920, 1776
+        ]
+
+        component pas_resistor RL {
+            resistance = "0.1"
+        }
+        [
+            position = 1808, 1776
+        ]
+
+        component pas_resistor R1 {
+            resistance = "100"
+        }
+        [
+            position = 2584, 1872
+            rotation = right
+        ]
+
+        component pas_capacitor C {
+            capacitance = "810e-6"
+        }
+        [
+            position = 2344, 1912
+            rotation = right
+        ]
+
+        component pas_resistor ESR {
+            resistance = "0.001"
+        }
+        [
+            position = 2344, 1824
+            rotation = right
+        ]
+
+        component pas_resistor R2 {
+            resistance = "25"
+        }
+        [
+            position = 2680, 1872
+            rotation = right
+        ]
+
+        component src_scada_input Reference {
+            addr = "1427111940"
+            execution_rate = "Ts"
+            max = "100"
+            min = "0"
+            unit = ""
+        }
+        [
+            position = 1616, 2088
+        ]
+
+        component src_scada_input "PWM Enable" {
+            addr = "1427111936"
+            execution_rate = "Ts"
+            max = "1"
+            min = "0"
+            unit = ""
+        }
+        [
+            position = 1616, 2224
+        ]
+
+        component gen_probe "Modulation Signal" {
+            addr = "8960"
+        }
+        [
+            position = 2160, 2160
+        ]
+
+        component gen_digital_probe enable {
+        }
+        [
+            position = 1720, 2168
+        ]
+
+        component "core/Single Pole Single Throw Contactor" Load {
+        }
+        [
+            position = 2632, 1776
+            size = 64, 32
+        ]
+
+        component "core/Voltage Measurement" Vout {
+            addr = "3"
+            execution_rate = "Ts"
+            sig_output = "True"
+        }
+        [
+            position = 2504, 1872
+            rotation = right
+            size = 64, 32
+        ]
+
+        component "core/Voltage Measurement" VL {
+        }
+        [
+            position = 1920, 1712
+            size = 64, 32
+        ]
+
+        component "core/Current Measurement" Iin {
+        }
+        [
+            position = 1696, 1776
+            size = 64, 32
+        ]
+
+        component "core/Current Measurement" Iout_boost {
+        }
+        [
+            position = 2256, 1776
+            size = 64, 32
+        ]
+
+        component "core/Current Measurement" Iout {
+        }
+        [
+            position = 2424, 1776
+            size = 64, 32
+        ]
+
+        component "core/Boost" BOOST {
+            ctrl_src = "Internal modulator"
+            d_time = "1e-6"
+            ref_sig_min_max = "[0.0, 1.0]"
+        }
+        [
+            position = 2112, 1872
+            size = 128, 256
+        ]
+
+        component Subsystem Control {
+            layout = dynamic
+            component gen_logic_op not {
+                operator = "NOT"
+            }
+            [
+                position = 7520, 8024
+            ]
+
+            component gen_limiter Limit {
+                lower_limit = "-1.0"
+                upper_limit = "1.0"
+            }
+            [
+                position = 7872, 7912
+            ]
+
+            component gen_gain I {
+            }
+            [
+                position = 7624, 7960
+            ]
+
+            component gen_sum Sum1 {
+                signs = "+-"
+            }
+            [
+                position = 7520, 7928
+            ]
+
+            component gen_integrator Integrator {
+                show_reset = "level"
+            }
+            [
+                position = 7696, 7976
+            ]
+
+            component gen_gain P {
+                gain = "P"
+            }
+            [
+                position = 7648, 7896
+            ]
+
+            component gen_sum Sum2 {
+            }
+            [
+                position = 7792, 7912
+            ]
+
+            component Subsystem "range shifter" {
+                layout = dynamic
+                component gen_gain Gain1 {
+                    gain = "0.5"
+                }
+                [
+                    position = 8160, 8160
+                ]
+
+                component gen_sum Sum3 {
+                }
+                [
+                    position = 8232, 8168
+                ]
+
+                component src_constant const {
+                    execution_rate = "Ts"
+                    value = "0.5"
+                }
+                [
+                    position = 8160, 8232
+                ]
+
+                port Out1 {
+                    position = right:1
+                    kind = sp
+                    direction =  in
+                    sp_type {
+                        default = inherit
+                        readonly = True
+                    }
+                }
+                [
+                    position = 8304, 8168
+                    hide_name = True
+                ]
+
+                port In2 {
+                    position = left:1
+                    kind = sp
+                    direction =  out
+                    sp_type {
+                        default = auto
+                        readonly = True
+                    }
+                }
+                [
+                    position = 8096, 8160
+                    hide_name = True
+                ]
+
+                connect Sum3.out Out1 as Connection3
+                connect Sum3.in1 const.out as Connection4
+                connect Gain1.in In2 as Connection1
+                connect Sum3.in Gain1.out as Connection2
+
+                mask {
+                    description = "Block shifts the reference for modulator from (-1.0, 1.0) range to (0.0, 1.0) range.
+                                        Reference can be used with the modulator with range (-1.0, 1.0) also. Range 0.0 to 1.0 is chosen just for demonstration pourposes."
+
+                    CODE open
+                        from typhoon.apps.schematic_editor.dialogs.component_property_dialogs.general import RegularComponentPropertiesDialog
+                    
+                        dialog = RegularComponentPropertiesDialog(
+                            component=component,
+                            property_container=component.masks[-1],
+                            current_diagram=current_diagram
+                        )
+                        dialog.exec_()
+                        
+                    ENDCODE
+                }
+            }
+            [
+                position = 7968, 7912
+                size = 48, 48
+            ]
+
+            port Reference {
+                position = auto:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 7328, 7888
+            ]
+
+            port "PWM Enable" {
+                position = auto:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 7328, 8024
+            ]
+
+            port Vout {
+                position = top:auto
+                kind = sp
+                direction =  out
+                sp_type {
+                    default = auto
+                    readonly = True
+                }
+            }
+            [
+                position = 7328, 7960
+            ]
+
+            port reference {
+                position = auto:auto
+                kind = sp
+                direction =  in
+                sp_type {
+                    default = inherit
+                    readonly = True
+                }
+            }
+            [
+                position = 8088, 7912
+            ]
+
+            junction Junction16 sp
+            [
+                position = 7584, 7928
+            ]
+
+            junction Junction22 sp
+            [
+                position = 7752, 7896
+            ]
+
+            connect Limit.in Sum2.out as Connection30
+            connect Sum2.in1 Integrator.out as Connection39
+            connect Sum1.out Junction16 as Connection37
+            connect Limit.out "range shifter.In2" as Connection31
+            connect Junction16 P.in as Connection20
+            [
+                breakpoints = 7584, 7928; 7584, 7896
+            ]
+            connect I.in Junction16 as Connection11
+            connect I.out Integrator.in as Connection10
+            connect P.out Junction22 as Connection49
+            connect not.out Integrator.reset as Connection47
+            connect Junction22 Sum2.in as Connection50
+            connect Reference Sum1.in as Connection51
+            connect Vout Sum1.in1 as Connection52
+            connect "PWM Enable" not.in as Connection53
+            connect reference "range shifter.Out1" as Connection54
+        }
+        [
+            position = 1968, 2104
+            size = 208, 80
+        ]
+
+        tag Goto1 {
+            value = "enable"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 1720, 2224
+            size = 60, 20
+        ]
+
+        tag From1 {
+            value = "enable"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 2032, 1696
+            size = 60, 20
+        ]
+
+        tag From2 {
+            value = "reference"
+            scope = global
+            kind = sp
+            direction = out
+        }
+        [
+            position = 2032, 1648
+            size = 60, 20
+        ]
+
+        tag Goto2 {
+            value = "reference"
+            scope = global
+            kind = sp
+            direction = in
+        }
+        [
+            position = 2208, 2104
+            size = 60, 20
+        ]
+
+        junction Junction5 pe
+        [
+            position = 2344, 1776
+        ]
+
+        junction Junction8 pe
+        [
+            position = 2344, 1968
+        ]
+
+        junction Junction10 pe
+        [
+            position = 2584, 1968
+        ]
+
+        junction Junction11 pe
+        [
+            position = 2584, 1776
+        ]
+
+        junction Junction12 pe
+        [
+            position = 1864, 1776
+        ]
+
+        junction Junction14 pe
+        [
+            position = 2504, 1776
+        ]
+
+        junction Junction15 pe
+        [
+            position = 2504, 1968
+        ]
+
+        junction Junction18 pe
+        [
+            position = 1968, 1776
+        ]
+
+        junction Junction19 sp
+        [
+            position = 1656, 2224
+        ]
+
+        junction Junction20 sp
+        [
+            position = 1656, 2168
+        ]
+
+        junction Junction21 sp
+        [
+            position = 2112, 2104
+        ]
+
+        comment Comment1 START <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd"><html><head><meta name="qrichtext" content="1" /><style type="text/css">p, li { white-space: pre-wrap; }</style></head><body style=" font-family:'Arial'; font-size:12pt; font-weight:400; font-style:normal;"><p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">In model initialization there are two values defined for execution rate (Ts). </p><p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">Smaller for ARM (HIL402), larger for uBlaze (HIL600 and HIL602)</p><p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">processors. </p><p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">Please uncomment the required one and comment the other one. </p></body></html> ENDCOMMENT 
+        [
+            position = 2176, 1528
+        ]
+
+        comment Comment2 START <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd"><html><head><meta name="qrichtext" content="1" /><style type="text/css">p, li { white-space: pre-wrap; }</style></head><body style=" font-family:'Arial'; font-size:12pt; font-weight:400; font-style:normal;"><p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style=" font-weight:600;">NOTE:</span></p><p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">For best exprience please load provided HIL SCADA. </p></body></html> ENDCOMMENT 
+        [
+            position = 2176, 1624
+        ]
+
+        connect BOOST.a_in Junction18 as Connection1
+        connect BOOST.b_out Junction8 as Connection2
+        connect C.p_node ESR.n_node as Connection3
+        connect C.n_node Junction8 as Connection4
+        [
+            breakpoints = 2344, 1936; 2344, 1936
+        ]
+        connect ESR.p_node Junction5 as Connection5
+        connect From1 BOOST.En as Connection6
+        connect From2 BOOST.In as Connection7
+        connect Goto1 Junction19 as Connection8
+        connect Iin.n_node RL.p_node as Connection12
+        connect Iout.n_node Junction14 as Connection13
+        connect Iout_boost.p_node BOOST.a_out as Connection14
+        connect Junction10 Junction15 as Connection15
+        connect Junction11 R1.p_node as Connection16
+        connect Junction12 RL.n_node as Connection17
+        connect Junction14 Junction11 as Connection18
+        connect Junction15 Junction8 as Connection19
+        connect Junction18 VL.n_node as Connection21
+        connect Junction19 "PWM Enable.out" as Connection22
+        connect Junction5 Iout.p_node as Connection26
+        connect Junction5 Iout_boost.n_node as Connection27
+        connect L.p_node Junction12 as Connection28
+        connect L.n_node Junction18 as Connection29
+        connect Load.a_in Junction11 as Connection32
+        connect Load.a_out R2.p_node as Connection33
+        connect R1.n_node Junction10 as Connection35
+        connect R2.n_node Junction10 as Connection36
+        connect VL.p_node Junction12 as Connection40
+        connect Vin.n_node BOOST.b_in as Connection41
+        connect Vin.p_node Iin.p_node as Connection42
+        connect Vout.p_node Junction14 as Connection43
+        connect Vout.n_node Junction15 as Connection44
+        connect Reference.out Control.Reference as Connection53
+        connect enable.in Junction20 as Connection54
+        connect Junction20 Junction19 as Connection55
+        [
+            breakpoints = 1656, 2224
+        ]
+        connect "Control.PWM Enable" Junction20 as Connection56
+        connect Vout.out Control.Vout as Connection57
+        [
+            breakpoints = 2536, 2040; 1968, 2040
+        ]
+        connect Control.reference Junction21 as Connection59
+        connect Junction21 Goto2 as Connection60
+        connect "Modulation Signal.in" Junction21 as Connection61
+    }
+
+    default {
+        gen_digital_probe {
+            override_signal_name = "False"
+            signal_name = ""
+            streaming_en = "False"
+            addr = "0"
+            streaming_er_idx = "0"
+            execution_rate = "inherit"
+        }
+
+        gen_gain {
+            gain = "1"
+            multiplication = "Element-wise(K.*u)"
+            execution_rate = "inherit"
+        }
+
+        gen_integrator {
+            show_reset = "none"
+            reset_type = "asynchronous"
+            show_init_condition = "internal"
+            init_value = "0"
+            limit_output = "False"
+            limit_upper = "inf"
+            limit_lower = "-inf"
+            show_state = "False"
+            state_port_type = "inherit"
+            execution_rate = "inherit"
+        }
+
+        gen_limiter {
+            upper_limit = "[\'inf\']"
+            lower_limit = "[\'-inf\']"
+            execution_rate = "inherit"
+        }
+
+        gen_logic_op {
+            operator = "AND"
+            inputs = "2"
+            execution_rate = "inherit"
+        }
+
+        gen_probe {
+            addr = "0"
+            override_signal_name = "False"
+            signal_name = ""
+            signal_type = "generic"
+            streaming_en = "False"
+            streaming_er_idx = "0"
+            execution_rate = "inherit"
+        }
+
+        gen_sum {
+            signs = "2"
+            execution_rate = "inherit"
+        }
+
+        pas_capacitor {
+            capacitance = "1e-6"
+            initial_voltage = "0"
+            pole_shift_ignore = "False"
+            visible = "True"
+        }
+
+        pas_inductor {
+            inductance = "1e-3"
+            initial_current = "0.0"
+            pole_shift_ignore = "False"
+            visible = "True"
+        }
+
+        pas_resistor {
+            resistance = "1"
+        }
+
+        src_constant {
+            value = "1"
+            signal_type = "real"
+            execution_rate = "100e-6"
+        }
+
+        src_scada_input {
+            addr = "0"
+            format = "real"
+            override_signal_name = "False"
+            signal_name = ""
+            signal_type = "real"
+            min = "-1e6"
+            max = "1e6"
+            def_value = "0"
+            unit = " "
+            execution_rate = "100e-6"
+        }
+
+        src_voltage {
+            sig_input = "False"
+            type = "signal generator"
+            param_set = "1phase"
+            parent_label = ""
+            addr = "0"
+            spc_nb = "0"
+            execution_rate = "100e-6"
+            cpd_visible = "True"
+            enable_snb = "False"
+            snb_type = "R2"
+            R2 = "0.0"
+            L1 = "0.1"
+            override_signal_name = "False"
+            signal_name = ""
+            init_source_nature = "Constant"
+            init_const_value = "0.0"
+            init_rms_value = "0.0"
+            init_frequency = "50.0"
+            init_phase = "0.0"
+        }
+
+        "core/Boost" {
+            ctrl_src = "Digital inputs"
+            op_mode = "Fixed carrier frequency"
+            carrier_freq = "10000.0"
+            carr_ph_offset = "0.0"
+            d_time = "5e-6"
+            ref_sig_min_max = "[-1.0, 1.0]"
+            execution_rate = "inherit"
+            S1 = "1"
+            S1_logic = "active high"
+            diode_pos = "upper_leg"
+            losses_estimation = "False"
+            Vce = "1.3"
+            Rce = "0"
+            Vd = "1.2"
+            Rd = "0"
+            i_sw = "[0.0, 6.0, 12.0, 18.0, 24.0]"
+            v_sw = "[0.0, 600.0]"
+            temp_sw = "[25.0, 50.0, 75.0, 100.0, 125.0]"
+            et_on_table_out = "[[0.0, 0.0275e-3, 0.15e-3, 0.275e-3, 0.3e-3], [0.35*3.8e-3, 0.4*3.8e-3, 0.8*3.8e-3, 0.68*3.8e-3, 0.9*3.8e-3], [0.65*3.8e-3, 0.9*3.8e-3, 1.2*3.8e-3, 1.5*3.8e-3, 1.7*3.8e-3], [0.9*3.8e-3, 1.3*3.8e-3, 1.7*3.8e-3, 1.9*3.8e-3, 2.25*3.8e-3], [1.1*3.8e-3, 1.7*3.8e-3, 2.1*3.8e-3, 2.3*3.8e-3, 2.5*3.8e-3]]"
+            et_off_table_out = "[[0.0, 0.0275e-3, 0.15e-3, 0.275e-3, 0.3e-3], [0.35*2.1e-3, 0.4*2.1e-3, 0.8*2.1e-3, 0.68*2.1e-3, 0.9*2.1e-3], [0.65*2.1e-3, 0.9*2.1e-3, 1.2*2.1e-3, 1.5*2.1e-3, 1.7*2.1e-3], [0.9*2.1e-3, 1.3*2.1e-3, 1.7*2.1e-3, 1.9*2.1e-3, 2.25*2.1e-3], [1.1*2.1e-3, 1.7*2.1e-3, 2.1*2.1e-3, 2.3*2.1e-3, 2.5*2.1e-3]]"
+            ed_off_table_out = "[[0.0, 0.0275e-3, 0.15e-3, 0.275e-3, 0.3e-3], [0.35*2.2e-3, 0.4*2.2e-3, 0.8*2.2e-3, 0.68*2.2e-3, 0.9*2.2e-3], [0.65*2.2e-3, 0.9*2.2e-3, 1.2*2.2e-3, 1.5*2.2e-3, 1.7*2.2e-3], [0.9*2.2e-3, 1.3*2.2e-3, 1.7*2.2e-3, 1.9*2.2e-3, 2.25*2.2e-3], [1.1*2.2e-3, 1.7*2.2e-3, 2.1*2.2e-3, 2.3*2.2e-3, 2.5*2.2e-3]]"
+            loss_exec_rate = "100e-6"
+            show_monitoring = "false"
+        }
+
+        "core/Single Pole Single Throw Contactor" {
+            ctrl_src = "Digital input"
+            Sa = "1"
+            Sa_logic = "active high"
+            enable_fb_out = "False"
+            fb_out_type = "real"
+            execution_rate = "inherit"
+            initial_state = "off"
+            on_delay = "0"
+            off_delay = "0"
+            switching = "any current"
+        }
+
+        "core/Voltage Measurement" {
+            bw_limit = "False"
+            frequency = "10e3"
+            comparator_enable = "False"
+            operator = "greater"
+            threshold = "0"
+            cmp_abs_value = "False"
+            feed_forward = "false"
+            sig_output = "False"
+            execution_rate = "100e-6"
+            addr = "0"
+            nd_msr_estimation = "false"
+            dev_cpl_msr = "false"
+            host_device = "0"
+            output_to_device = "0"
+            dev_cpl_index = "0"
+            dev_cpl_var_nb = "0"
+            visible = "True"
+            override_signal_name = "False"
+            signal_name = ""
+        }
+
+        "core/Current Measurement" {
+            bw_limit = "False"
+            frequency = "10e3"
+            comparator_enable = "False"
+            operator = "greater"
+            threshold = "0"
+            cmp_abs_value = "False"
+            feed_forward = "false"
+            sig_output = "False"
+            execution_rate = "100e-6"
+            addr = "0"
+            nd_msr_estimation = "false"
+            dev_cpl_msr = "false"
+            host_device = "0"
+            output_to_device = "0"
+            dev_cpl_index = "0"
+            dev_cpl_var_nb = "0"
+            visible = "True"
+            override_signal_name = "False"
+            signal_name = ""
+        }
+    }
+
+    CODE model_init
+        # Numpy module is imported as 'np'
+        # Scipy module is imported as 'sp'
+        
+        # Ts for ARM:
+        Ts = 50e-6
+        
+        # Ts for uBlaze
+        #Ts = 60e-6
+        
+        P = 0.6*0.01
+        I = 0.6*0.002/0.5/0.0055
+    ENDCODE
+}
